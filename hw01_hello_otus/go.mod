@@ -1,4 +1,4 @@
-module github.com/artembert/golang-pro-otus-hw/hw-1
+module github.com/artembert/golang-pro-otus-hw/hw01_hello_otus
 
 go 1.19
 
