@@ -29,12 +29,11 @@ func Unpack(line string) (string, error) {
 			unzipLetters = append(unzipLetters, runes[index])
 			continue
 		}
+		if index == 0 {
+			return "", ErrInvalidString
+		}
 		if zipNumber == 0 {
-			if len(unzipLetters) > 0 {
-				unzipLetters = unzipLetters[:len(unzipLetters)-1]
-			} else {
-				return "", errors.New("invalid format of string")
-			}
+			unzipLetters = unzipLetters[:len(unzipLetters)-1]
 		} else {
 			for i := 0; i < zipNumber-1; i++ {
 				unzipLetters = append(unzipLetters, runes[index-1])
