@@ -19,12 +19,12 @@ func isSlash(letter rune) bool {
 
 func Unpack(line string) (string, error) {
 	runes := []rune(line)
-	unzipLetters := []rune{}
+	var unzipLetters []rune
 
 	for index := 0; index < len(runes); index++ {
 		if isSlash(runes[index]) {
 			unzipLetters = append(unzipLetters, runes[index+1])
-			index += 1
+			index++
 			continue
 		}
 		if zipNumber, err := strconv.Atoi(string(runes[index])); err == nil {
