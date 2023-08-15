@@ -11,10 +11,7 @@ var ErrInvalidString = errors.New("invalid string")
 
 func isSlash(letter rune) bool {
 	slashRune, _ := utf8.DecodeRuneInString("\\")
-	if slashRune == letter {
-		return true
-	}
-	return false
+	return slashRune == letter
 }
 
 func Unpack(line string) (string, error) {
