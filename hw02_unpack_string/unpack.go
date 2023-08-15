@@ -32,7 +32,11 @@ func Unpack(line string) (string, error) {
 		if zipNumber, err := strconv.Atoi(string(runes[index])); err == nil {
 			//fmt.Printf("zipNumber: %d\n", zipNumber)
 			if zipNumber == 0 {
-				unzipLetters = unzipLetters[:len(unzipLetters)-1]
+				if len(unzipLetters) > 0 {
+					unzipLetters = unzipLetters[:len(unzipLetters)-1]
+				} else {
+					return "", errors.New("invalid format of string")
+				}
 			} else {
 				for i := 0; i < zipNumber-1; i++ {
 					unzipLetters = append(unzipLetters, runes[index-1])
