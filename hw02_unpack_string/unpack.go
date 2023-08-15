@@ -24,20 +24,21 @@ func Unpack(line string) (string, error) {
 			index++
 			continue
 		}
-		if zipNumber, err := strconv.Atoi(string(runes[index])); err == nil {
-			if zipNumber == 0 {
-				if len(unzipLetters) > 0 {
-					unzipLetters = unzipLetters[:len(unzipLetters)-1]
-				} else {
-					return "", errors.New("invalid format of string")
-				}
+		zipNumber, err := strconv.Atoi(string(runes[index]))
+		if err != nil {
+			unzipLetters = append(unzipLetters, runes[index])
+			continue
+		}
+		if zipNumber == 0 {
+			if len(unzipLetters) > 0 {
+				unzipLetters = unzipLetters[:len(unzipLetters)-1]
 			} else {
-				for i := 0; i < zipNumber-1; i++ {
-					unzipLetters = append(unzipLetters, runes[index-1])
-				}
+				return "", errors.New("invalid format of string")
 			}
 		} else {
-			unzipLetters = append(unzipLetters, runes[index])
+			for i := 0; i < zipNumber-1; i++ {
+				unzipLetters = append(unzipLetters, runes[index-1])
+			}
 		}
 	}
 
