@@ -11,20 +11,30 @@ var ErrInvalidString = errors.New("invalid string")
 
 func Unpack(line string) (string, error) {
 	runes := []rune(line)
-	var b strings.Builder
+	unzipLetters := []rune{}
 
 	for index := 0; index < len(runes); index++ {
 		fmt.Printf("index: %d\n", index)
 		if zipNumber, err := strconv.Atoi(string(runes[index])); err == nil {
 			fmt.Printf("zipNumber: %d\n", zipNumber)
-			for i := 0; i < zipNumber-1; i++ {
-				b.WriteRune(runes[index-1])
+			if zipNumber == 0 {
+				unzipLetters = unzipLetters[:len(unzipLetters)-1]
+			} else {
+				for i := 0; i < zipNumber-1; i++ {
+					unzipLetters = append(unzipLetters, runes[index-1])
+				}
 			}
 		} else {
 			fmt.Printf("rune: %s\n", string(runes[index]))
-			b.WriteRune(runes[index])
+			unzipLetters = append(unzipLetters, runes[index])
 		}
-		fmt.Printf("collection: [%s]\n", b.String())
+		fmt.Printf("collection: [%s]\n", string(unzipLetters))
 	}
+
+	var b strings.Builder
+	for _, letter := range unzipLetters {
+		b.WriteRune(letter)
+	}
+
 	return b.String(), nil
 }
