@@ -2,9 +2,9 @@ package hw02unpackstring
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 	"strings"
+	"unicode"
 )
 
 var ErrInvalidString = errors.New("invalid string")
@@ -14,9 +14,13 @@ func Unpack(line string) (string, error) {
 	unzipLetters := []rune{}
 
 	for index := 0; index < len(runes); index++ {
-		fmt.Printf("index: %d\n", index)
 		if zipNumber, err := strconv.Atoi(string(runes[index])); err == nil {
-			fmt.Printf("zipNumber: %d\n", zipNumber)
+			if index == 0 {
+				return "", ErrInvalidString
+			}
+			if index > 0 && unicode.IsDigit(runes[index-1]) {
+				return "", ErrInvalidString
+			}
 			if zipNumber == 0 {
 				unzipLetters = unzipLetters[:len(unzipLetters)-1]
 			} else {
@@ -25,10 +29,8 @@ func Unpack(line string) (string, error) {
 				}
 			}
 		} else {
-			fmt.Printf("rune: %s\n", string(runes[index]))
 			unzipLetters = append(unzipLetters, runes[index])
 		}
-		fmt.Printf("collection: [%s]\n", string(unzipLetters))
 	}
 
 	var b strings.Builder
