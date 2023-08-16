@@ -14,22 +14,23 @@ func Unpack(line string) (string, error) {
 	unzipLetters := []rune{}
 
 	for index := 0; index < len(runes); index++ {
-		if zipNumber, err := strconv.Atoi(string(runes[index])); err == nil {
-			if index == 0 {
-				return "", ErrInvalidString
-			}
-			if index > 0 && unicode.IsDigit(runes[index-1]) {
-				return "", ErrInvalidString
-			}
-			if zipNumber == 0 {
-				unzipLetters = unzipLetters[:len(unzipLetters)-1]
-			} else {
-				for i := 0; i < zipNumber-1; i++ {
-					unzipLetters = append(unzipLetters, runes[index-1])
-				}
-			}
-		} else {
+		zipNumber, err := strconv.Atoi(string(runes[index]))
+		if err != nil {
 			unzipLetters = append(unzipLetters, runes[index])
+			continue
+		}
+		if index == 0 {
+			return "", ErrInvalidString
+		}
+		if index > 0 && unicode.IsDigit(runes[index-1]) {
+			return "", ErrInvalidString
+		}
+		if zipNumber == 0 {
+			unzipLetters = unzipLetters[:len(unzipLetters)-1]
+		} else {
+			for i := 0; i < zipNumber-1; i++ {
+				unzipLetters = append(unzipLetters, runes[index-1])
+			}
 		}
 	}
 
