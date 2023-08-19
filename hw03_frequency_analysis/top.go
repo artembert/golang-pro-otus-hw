@@ -9,11 +9,6 @@ var delimiter = regexp.MustCompile(`[ \n\r\t]`)
 
 const MostFrequentWordsAmout = 10
 
-type WordsByCont struct {
-	Count     int
-	WordsList []string
-}
-
 type WordCounter struct {
 	Word  string
 	Count int
