@@ -43,6 +43,8 @@ var text = `Как видите, он  спускается  по  лестни�
 // TODO: Handle panic
 var delimiter = regexp.MustCompile("[ \\n\\r\\t]")
 
+const MOST_FREQUENT_WORDS_AMOUT = 10
+
 type WordsByCont struct {
 	Count     int
 	WordsList []string
@@ -76,6 +78,51 @@ func groupWordsByFrequency(arr []WordCounter) map[int][]string {
 	return frequencyDictionary
 }
 
+func getMostFrequentWords(dictionary map[int][]string, amount int) []string {
+	sortedFrequencies := make([]int, 0, len(dictionary))
+	for frequency := range dictionary {
+		sortedFrequencies = append(sortedFrequencies, frequency)
+	}
+	sort.Slice(sortedFrequencies, func(i, j int) bool {
+		return sortedFrequencies[i] > sortedFrequencies[j]
+	})
+	// for _, k := range sortedFrequencies {
+	// 	fmt.Println(k)
+	// }
+
+	count := amount
+	currentFrequentIndex := 0
+	result := make([]string, 0, amount)
+	for count > 0 && currentFrequentIndex < len(sortedFrequencies) {
+		wordsListByCurrentFrequency := dictionary[sortedFrequencies[currentFrequentIndex]]
+		sort.Strings(wordsListByCurrentFrequency)
+		index := 0
+		for count > 0 && index < len(wordsListByCurrentFrequency) {
+			result = append(result, wordsListByCurrentFrequency[index])
+			count--
+			index++
+		}
+		// if count >= len(wordsListByCurrentFrequency) {
+		// 	for _, word := range wordsListByCurrentFrequency {
+		// 		result = append(result, word)
+		// 	}
+		// 	count = count - len(wordsListByCurrentFrequency)
+		// } else {
+
+		// 	index := 0
+		// 	for count > 0 {
+		// 		result = append(result, wordsListByCurrentFrequency[index])
+		// 		count--
+		// 		index++
+		// 	}
+		// }
+		currentFrequentIndex++
+	}
+
+	fmt.Println(result)
+	return result
+}
+
 func sortWords(arr []WordCounter) []WordCounter {
 	sort.Slice(arr, func(i, j int) bool {
 		return arr[i].Count > arr[j].Count
@@ -100,9 +147,7 @@ func Top10(text string) []string {
 		}
 	}
 
-	groupWordsByFrequency(getSliceFromDictionary(dictionary))
-
-	return nil
+	return getMostFrequentWords(groupWordsByFrequency(getSliceFromDictionary(dictionary)), MOST_FREQUENT_WORDS_AMOUT)
 }
 
 func main() {
