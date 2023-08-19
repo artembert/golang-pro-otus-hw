@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"regexp"
+	"sort"
 )
 
 var text = `Как видите, он  спускается  по  лестнице  вслед  за  своим
@@ -42,6 +43,30 @@ var text = `Как видите, он  спускается  по  лестни�
 // TODO: Handle panic
 var delimiter = regexp.MustCompile("[ \\n\\r\\t]")
 
+type WordCounter struct {
+	Word  string
+	Count int
+}
+
+func getSliceFromDictionary(dictionary map[string]int) []WordCounter {
+	arr := []WordCounter{}
+
+	for key, value := range dictionary {
+		arr = append(arr, *&WordCounter{Word: key, Count: value})
+	}
+	return arr
+}
+
+func sortWords(arr []WordCounter) []WordCounter {
+	sort.Slice(arr, func(i, j int) bool {
+		return arr[i].Count > arr[j].Count
+	})
+
+	fmt.Print(arr)
+
+	return arr
+}
+
 func Top10(text string) []string {
 	dictionary := map[string]int{}
 
@@ -56,7 +81,7 @@ func Top10(text string) []string {
 		}
 	}
 
-	fmt.Print(dictionary)
+	sortWords(getSliceFromDictionary(dictionary))
 
 	return nil
 }
