@@ -41,7 +41,7 @@ import (
 // 		В этот вечер...`
 
 // TODO: Handle panic
-var delimiter = regexp.MustCompile("[ \\n\\r\\t]")
+var delimiter = regexp.MustCompile(`[ \n\r\t]`)
 
 const MOST_FREQUENT_WORDS_AMOUT = 10
 
