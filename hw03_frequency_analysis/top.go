@@ -43,6 +43,11 @@ var text = `Как видите, он  спускается  по  лестни�
 // TODO: Handle panic
 var delimiter = regexp.MustCompile("[ \\n\\r\\t]")
 
+type WordsByCont struct {
+	Count     int
+	WordsList []string
+}
+
 type WordCounter struct {
 	Word  string
 	Count int
@@ -55,6 +60,20 @@ func getSliceFromDictionary(dictionary map[string]int) []WordCounter {
 		arr = append(arr, *&WordCounter{Word: key, Count: value})
 	}
 	return arr
+}
+
+func groupWordsByFrequency(arr []WordCounter) map[int][]string {
+	frequencyDictionary := map[int][]string{}
+
+	for _, value := range arr {
+		if _, ok := frequencyDictionary[value.Count]; ok {
+			frequencyDictionary[value.Count] = append(frequencyDictionary[value.Count], value.Word)
+		} else {
+			frequencyDictionary[value.Count] = []string{value.Word}
+		}
+	}
+
+	return frequencyDictionary
 }
 
 func sortWords(arr []WordCounter) []WordCounter {
@@ -81,7 +100,7 @@ func Top10(text string) []string {
 		}
 	}
 
-	sortWords(getSliceFromDictionary(dictionary))
+	groupWordsByFrequency(getSliceFromDictionary(dictionary))
 
 	return nil
 }
