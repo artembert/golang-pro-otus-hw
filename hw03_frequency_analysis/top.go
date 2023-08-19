@@ -39,15 +39,24 @@ var text = `Как видите, он  спускается  по  лестни�
 	посидеть у огня и послушать какую-нибудь интересную сказку.
 		В этот вечер...`
 
-// TODO: Handle panics
+// TODO: Handle panic
 var delimiter = regexp.MustCompile("[ \\n\\r\\t]")
 
 func Top10(text string) []string {
-	//dictionary := map[string]string{}
+	dictionary := map[string]int{}
 
-	for i, word := range delimiter.Split(text, -1) {
-		fmt.Printf("%d: %v\n", i, word)
+	for _, word := range delimiter.Split(text, -1) {
+		if delimiter.MatchString(word) {
+			continue
+		}
+		if number, ok := dictionary[word]; ok {
+			dictionary[word] = number + 1
+		} else {
+			dictionary[word] = 1
+		}
 	}
+
+	fmt.Print(dictionary)
 
 	return nil
 }
