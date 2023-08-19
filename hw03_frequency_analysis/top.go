@@ -46,7 +46,7 @@ func Top10(text string) []string {
 	dictionary := map[string]int{}
 
 	for _, word := range delimiter.Split(text, -1) {
-		if delimiter.MatchString(word) {
+		if len(word) == 0 || delimiter.MatchString(word) {
 			continue
 		}
 		if number, ok := dictionary[word]; ok {
