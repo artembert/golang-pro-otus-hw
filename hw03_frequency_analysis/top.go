@@ -7,7 +7,7 @@ import (
 
 var delimiter = regexp.MustCompile(`[ \n\r\t]`)
 
-const MostFrequentWordsAmout = 10
+const MostFrequentWordsAmount = 10
 
 type WordCounter struct {
 	Word  string
@@ -74,5 +74,5 @@ func Top10(text string) []string {
 		}
 	}
 
-	return getMostFrequentWords(groupWordsByFrequency(getSliceFromDictionary(dictionary)), MostFrequentWordsAmout)
+	return getMostFrequentWords(groupWordsByFrequency(getSliceFromDictionary(dictionary)), MostFrequentWordsAmount)
 }
