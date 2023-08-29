@@ -74,5 +74,8 @@ func Top10(text string) []string {
 		}
 	}
 
-	return getMostFrequentWords(groupWordsByFrequency(getSliceFromDictionary(dictionary)), MostFrequentWordsAmount)
+	sliceFromDictionary := getSliceFromDictionary(dictionary)
+	wordsByFrequency := groupWordsByFrequency(sliceFromDictionary)
+
+	return getMostFrequentWords(wordsByFrequency, MostFrequentWordsAmount)
 }
