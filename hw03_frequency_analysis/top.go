@@ -67,10 +67,7 @@ func Top10(text string) []string {
 		if len(word) == 0 || delimiter.MatchString(word) {
 			continue
 		}
-		if number, ok := dictionary[word]; ok {
-			dictionary[word] = number + 1
-		} else {
-			dictionary[word] = 1
+		dictionary[word]++
 		}
 	}
 
