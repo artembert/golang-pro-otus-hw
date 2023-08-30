@@ -33,9 +33,8 @@ func Top10(text string) []string {
 		a, b := wordsSlice[i], wordsSlice[j]
 		if wordsCountMap[a] == wordsCountMap[b] {
 			return a < b
-		} else {
-			return wordsCountMap[a] > wordsCountMap[b]
 		}
+		return wordsCountMap[a] > wordsCountMap[b]
 	})
 
 	if len(wordsCountMap) > MostFrequentWordsAmount {
