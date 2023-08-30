@@ -68,7 +68,6 @@ func Top10(text string) []string {
 			continue
 		}
 		dictionary[word]++
-		}
 	}
 
 	sliceFromDictionary := getSliceFromDictionary(dictionary)
