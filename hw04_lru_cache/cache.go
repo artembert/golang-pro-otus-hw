@@ -14,6 +14,11 @@ type lruCache struct {
 	items    map[Key]*ListItem
 }
 
+type cacheItem struct {
+	key   Key
+	value interface{}
+}
+
 func NewCache(capacity int) Cache {
 	return &lruCache{
 		capacity: capacity,
@@ -33,6 +38,6 @@ func (list *lruCache) Get(key Key) (interface{}, bool) {
 }
 
 func (list *lruCache) Clear() {
-	//TODO implement me
-	panic("implement me")
+	list.queue = NewList()
+	list.items = make(map[Key]*ListItem, list.capacity)
 }
