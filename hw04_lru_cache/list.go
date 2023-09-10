@@ -99,21 +99,14 @@ func (list *list) Remove(itemToRemove *ListItem) {
 }
 
 func (list *list) MoveToFront(itemToMove *ListItem) {
-	if list.Len() == 0 {
-		return
-	}
-	if itemToMove == nil {
-		return
-	}
 	if itemToMove == list.head {
 		return
 	}
-	if itemToMove.Prev == nil && itemToMove.Next == nil {
-		return
-	}
-
 	list.Remove(itemToMove)
-	list.PushFront(itemToMove.Value)
+	list.size++
+	list.head.Prev = itemToMove
+	itemToMove.Next = list.head
+	list.head = itemToMove
 }
 
 func (list *list) Len() int {
