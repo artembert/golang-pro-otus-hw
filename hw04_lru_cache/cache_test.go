@@ -50,7 +50,17 @@ func TestCache(t *testing.T) {
 	})
 
 	t.Run("purge logic", func(t *testing.T) {
-		// Write me
+		capacity := 2
+		c := NewCache(capacity)
+		c.Set("a", 100)
+		c.Set("b", 200)
+		_, okA := c.Get("a")
+		_, okB := c.Get("b")
+		require.True(t, okA)
+		require.True(t, okB)
+		c.Set("c", 300)
+		_, okA2 := c.Get("a")
+		require.False(t, okA2) // "a" should be removed from cache
 	})
 }
 
