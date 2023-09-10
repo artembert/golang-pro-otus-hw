@@ -12,8 +12,8 @@ type List interface {
 
 type ListItem struct {
 	Value interface{}
-	Next  *ListItem
 	Prev  *ListItem
+	Next  *ListItem
 }
 
 type list struct {
@@ -22,44 +22,104 @@ type list struct {
 	tail *ListItem
 }
 
-func NewList() List {
-	return new(list)
-}
-
 func (list *list) Front() *ListItem {
-	//TODO implement me
-	panic("implement me")
+	return list.head
 }
 
 func (list *list) Back() *ListItem {
-	//TODO implement me
-	panic("implement me")
+	return list.tail
 }
 
 func (list *list) PushFront(value interface{}) *ListItem {
-	//TODO implement me
-	panic("implement me")
+	if list.head == nil {
+		newNode := &ListItem{
+			Value: value,
+			Prev:  nil,
+			Next:  nil,
+		}
+		list.tail = newNode
+		list.head = newNode
+		list.size++
+		return newNode
+	} else {
+		newNode := &ListItem{
+			Value: value,
+			Prev:  nil,
+			Next:  list.head,
+		}
+		list.head.Prev = newNode
+		list.head = newNode
+		list.size++
+		return newNode
+	}
 }
 
 func (list *list) PushBack(value interface{}) *ListItem {
-	//TODO implement me
-	panic("implement me")
+	if list.head == nil {
+		newNode := &ListItem{
+			Value: value,
+			Prev:  nil,
+			Next:  nil,
+		}
+		list.head = newNode
+		list.tail = newNode
+		list.size++
+		return newNode
+	} else {
+		newNode := &ListItem{
+			Value: value,
+			Prev:  list.tail,
+			Next:  nil,
+		}
+		list.tail.Next = newNode
+		list.tail = newNode
+		list.size++
+		return newNode
+	}
 }
 
-func (list *list) Remove(i *ListItem) {
-	//TODO implement me
-	panic("implement me")
+func (list *list) Remove(itemToRemove *ListItem) {
+	switch {
+	case list.head == list.tail:
+		if itemToRemove == list.head {
+			list.head = nil
+			list.tail = nil
+		}
+	case itemToRemove == list.head:
+		list.head = list.head.Next
+		list.head.Prev = nil
+	case itemToRemove == list.tail:
+		list.tail = list.tail.Prev
+		list.tail.Next = nil
+	default:
+		itemToRemove.Prev.Next = itemToRemove.Next
+		itemToRemove.Next.Prev = itemToRemove.Prev
+	}
+	list.size--
 }
 
-func (list *list) MoveToFront(i *ListItem) {
-	//TODO implement me
-	panic("implement me")
-}
+func (list *list) MoveToFront(itemToMove *ListItem) {
+	if list.Len() == 0 {
+		return
+	}
+	if itemToMove == nil {
+		return
+	}
+	if itemToMove == list.head {
+		return
+	}
+	if itemToMove.Prev == nil && itemToMove.Next == nil {
+		return
+	}
 
-func NewListItem(value interface{}) *ListItem {
-	return &ListItem{Value: value}
+	list.Remove(itemToMove)
+	list.PushFront(itemToMove.Value)
 }
 
 func (list *list) Len() int {
 	return list.size
+}
+
+func NewList() List {
+	return new(list)
 }
