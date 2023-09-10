@@ -41,17 +41,16 @@ func (list *list) PushFront(value interface{}) *ListItem {
 		list.head = newNode
 		list.size++
 		return newNode
-	} else {
-		newNode := &ListItem{
-			Value: value,
-			Prev:  nil,
-			Next:  list.head,
-		}
-		list.head.Prev = newNode
-		list.head = newNode
-		list.size++
-		return newNode
 	}
+	newNode := &ListItem{
+		Value: value,
+		Prev:  nil,
+		Next:  list.head,
+	}
+	list.head.Prev = newNode
+	list.head = newNode
+	list.size++
+	return newNode
 }
 
 func (list *list) PushBack(value interface{}) *ListItem {
@@ -65,17 +64,16 @@ func (list *list) PushBack(value interface{}) *ListItem {
 		list.tail = newNode
 		list.size++
 		return newNode
-	} else {
-		newNode := &ListItem{
-			Value: value,
-			Prev:  list.tail,
-			Next:  nil,
-		}
-		list.tail.Next = newNode
-		list.tail = newNode
-		list.size++
-		return newNode
 	}
+	newNode := &ListItem{
+		Value: value,
+		Prev:  list.tail,
+		Next:  nil,
+	}
+	list.tail.Next = newNode
+	list.tail = newNode
+	list.size++
+	return newNode
 }
 
 func (list *list) Remove(itemToRemove *ListItem) {
