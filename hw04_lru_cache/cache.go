@@ -1,10 +1,5 @@
 package hw04lrucache
 
-import (
-	"encoding/json"
-	"fmt"
-)
-
 type Key string
 
 type Cache interface {
@@ -41,7 +36,6 @@ func (cache *lruCache) Set(key Key, value interface{}) bool {
 	if isExists {
 		cashedItem.Value = newCacheItem
 		cache.queue.MoveToFront(cashedItem)
-		debugMap(cache.items)
 		return true
 	}
 	cache.queue.PushFront(newCacheItem)
@@ -51,7 +45,6 @@ func (cache *lruCache) Set(key Key, value interface{}) bool {
 		cache.queue.Remove(lastUsedRecentItem)
 		delete(cache.items, lastUsedRecentItem.Value.(cacheItem).key)
 	}
-	debugMap(cache.items)
 	return false
 }
 
@@ -67,9 +60,4 @@ func (cache *lruCache) Get(key Key) (interface{}, bool) {
 func (cache *lruCache) Clear() {
 	cache.queue = NewList()
 	cache.items = make(map[Key]*ListItem, cache.capacity)
-}
-
-func debugMap(collection map[Key]*ListItem) {
-	bs, _ := json.Marshal(collection)
-	fmt.Println(string(bs))
 }
