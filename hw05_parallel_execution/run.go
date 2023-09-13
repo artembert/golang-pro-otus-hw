@@ -20,7 +20,6 @@ func (c *Counter) inc() {
 	c.value++
 }
 
-// Descrive the Run function:
 func Run(tasks []Task, tasksThreads, errorsLimit int) error {
 	if tasksThreads < 1 {
 		return nil
