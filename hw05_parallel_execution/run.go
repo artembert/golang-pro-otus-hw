@@ -20,6 +20,12 @@ func (c *Counter) inc() {
 	c.value++
 }
 
+func (c *Counter) isGreaterOrEqual(value int) bool {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	return c.value >= value
+}
+
 func Run(tasks []Task, tasksThreads, errorsLimit int) error {
 	if tasksThreads < 1 {
 		return nil
@@ -45,7 +51,7 @@ func Run(tasks []Task, tasksThreads, errorsLimit int) error {
 	}
 
 	for _, task := range tasks {
-		if errorsCount.value >= errorsLimit {
+		if errorsCount.isGreaterOrEqual(errorsLimit) {
 			break
 		}
 		tasksChannel <- task
@@ -54,7 +60,7 @@ func Run(tasks []Task, tasksThreads, errorsLimit int) error {
 
 	wg.Wait()
 
-	if errorsCount.value >= errorsLimit {
+	if errorsCount.isGreaterOrEqual(errorsLimit) {
 		return ErrErrorsLimitExceeded
 	}
 	return nil
