@@ -12,7 +12,8 @@ func ExecutePipeline(in In, done In, stages ...Stage) Out {
 	for _, stage := range stages {
 		in = stage(stream(done, in))
 	}
-	return nil
+
+	return in
 }
 
 func stream(done In, in In) Out {
