@@ -24,18 +24,13 @@ func stream(done In, in In) Out {
 
 		for {
 			select {
+			case <-done:
+				return
 			case data, ok := <-in:
 				if !ok {
 					return
 				}
-
-				select {
-				case out <- data:
-				case <-done:
-					return
-				}
-			case <-done:
-				return
+				out <- data
 			}
 		}
 	}()
