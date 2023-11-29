@@ -24,7 +24,7 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 		}
 	}(sourceFile)
 	if sourceFile == nil {
-		return err
+		return ErrFileRead
 	}
 
 	if err != nil {
@@ -32,34 +32,28 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 		return ErrOffsetExceedsFileSize
 	}
 
-	var buffer []byte = nil
-	if limit != 0 {
-		buffer = make([]byte, limit)
-	}
-
-	_, err = io.ReadFull(sourceFile, buffer)
-	if err != nil {
-		fmt.Println("error reading file:", err)
-		return ErrFileRead
-	}
-
-	distFile, err := createFile(toPath)
+	distFile, err := os.Create(toPath)
 	if err != nil {
 		fmt.Println("error creating file:", err)
 		return err
 	}
 
-	_, err = io.CopyBuffer(distFile, sourceFile, buffer)
+	if limit == 0 {
+		_, err = io.Copy(distFile, sourceFile)
+	} else {
+		_, err = io.CopyN(distFile, sourceFile, limit)
+	}
 	if err != nil {
 		fmt.Println("error writing to file:", err)
 		return ErrFileWrite
 	}
 
-	err = distFile.Close()
-	if err != nil {
-		fmt.Println("error closing file:", err)
-		return err
-	}
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			fmt.Println("error closing file:", err)
+		}
+	}(distFile)
 	return nil
 }
 
@@ -72,15 +66,6 @@ func openFile(path string, offset int64) (*os.File, error) {
 		} else {
 			return nil, ErrUnsupportedFile
 		}
-	}
-
-	return file, err
-}
-
-func createFile(path string) (*os.File, error) {
-	file, err := os.Create(path)
-	if err != nil {
-		fmt.Println("error creating file:", err)
 	}
 
 	return file, err
