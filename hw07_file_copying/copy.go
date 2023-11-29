@@ -44,8 +44,10 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 		_, err = io.CopyN(distFile, sourceFile, limit)
 	}
 	if err != nil {
-		fmt.Println("error writing to file:", err)
-		return ErrFileWrite
+		if err != io.EOF {
+			fmt.Println("error writing to file:", err)
+			return ErrFileWrite
+		}
 	}
 
 	defer func(file *os.File) {
