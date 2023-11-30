@@ -24,6 +24,7 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 		}
 	}(sourceFile)
 	if sourceFile == nil {
+		fmt.Printf("error reading file '%v'\n", fromPath)
 		return ErrFileRead
 	}
 
