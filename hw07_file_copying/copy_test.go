@@ -20,7 +20,7 @@ func dropTempFolder(t *testing.T, path string) {
 func prepareTestDir(t *testing.T) (string, string) {
 	t.Helper()
 	dir := filepath.Join("tmp", strings.ReplaceAll(t.Name(), "/", "_"))
-	err := os.MkdirAll(dir, os.FileMode(0700))
+	err := os.MkdirAll(dir, os.FileMode(0o700))
 	if err != nil {
 		t.Errorf("Error creating test directory: %v", err)
 	}
