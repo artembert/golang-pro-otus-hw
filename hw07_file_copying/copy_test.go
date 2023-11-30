@@ -10,6 +10,7 @@ import (
 )
 
 func dropTempFolder(t *testing.T, path string) {
+	t.Helper()
 	err := os.RemoveAll(path)
 	if err != nil {
 		t.Errorf("Error removing test folder '%v': %v", path, err)
@@ -17,6 +18,7 @@ func dropTempFolder(t *testing.T, path string) {
 }
 
 func prepareTestDir(t *testing.T) (string, string) {
+	t.Helper()
 	dir := filepath.Join("tmp", strings.ReplaceAll(t.Name(), "/", "_"))
 	err := os.MkdirAll(dir, os.FileMode(0700))
 	if err != nil {
