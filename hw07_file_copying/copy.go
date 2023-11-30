@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"os"
+
+	"github.com/cheggaaa/pb/v3"
 )
 
 var (
@@ -55,11 +57,18 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 		}
 	}(distFile)
 
+	bar := pb.Full.Start64(limit)
+
 	if limit == 0 {
-		_, err = io.Copy(distFile, sourceFile)
+		barReader := bar.NewProxyReader(sourceFile)
+		_, err = io.Copy(distFile, barReader)
 	} else {
-		_, err = io.CopyN(distFile, sourceFile, limit)
+		reader := io.LimitReader(sourceFile, limit)
+		barReader := bar.NewProxyReader(reader)
+		_, err = io.Copy(distFile, barReader)
 	}
+
+	bar.Finish()
 	if err != nil && errors.Is(err, io.EOF) {
 		return ErrFileWrite
 	}
