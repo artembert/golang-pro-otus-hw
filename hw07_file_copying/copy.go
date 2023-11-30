@@ -57,8 +57,9 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 
 	if limit == 0 {
 		_, err = io.Copy(distFile, sourceFile)
+	} else {
+		_, err = io.CopyN(distFile, sourceFile, limit)
 	}
-	_, err = io.CopyN(distFile, sourceFile, limit)
 	if err != nil && errors.Is(err, io.EOF) {
 		return ErrFileWrite
 	}
