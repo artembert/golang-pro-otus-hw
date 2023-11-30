@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 	"strings"
@@ -63,6 +64,16 @@ func TestCopy(t *testing.T) {
 		err := Copy("testdata/input.txt", outFile, 10, 10)
 		if err != nil {
 			t.Errorf("Expected nil, got %v", err)
+		}
+	})
+
+	t.Run("Expect source file does not exist", func(t *testing.T) {
+		dir, outFile := prepareTestDir(t)
+		defer dropTempFolder(t, dir)
+
+		err := Copy("testdata/nonexistent.txt", outFile, 10, 10)
+		if !errors.Is(err, ErrFileDoesNotExist) {
+			t.Errorf("Expected ErrFileDoesNotExist, got %v", err)
 		}
 	})
 }

@@ -17,6 +17,9 @@ var (
 
 func Copy(fromPath, toPath string, offset, limit int64) error {
 	sourceFile, err := openFile(fromPath, offset)
+	if err != nil {
+		return err
+	}
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
@@ -62,13 +65,16 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 
 func openFile(path string, offset int64) (*os.File, error) {
 	file, err := os.Open(path)
-	_, err = file.Seek(offset, io.SeekStart)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return nil, ErrFileDoesNotExist
 		} else {
 			return nil, ErrUnsupportedFile
 		}
+	}
+	_, err = file.Seek(offset, io.SeekStart)
+	if err != nil {
+		return nil, err
 	}
 
 	return file, err
