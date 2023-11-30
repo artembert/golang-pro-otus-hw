@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -74,6 +75,17 @@ func TestCopy(t *testing.T) {
 		err := Copy("testdata/nonexistent.txt", outFile, 10, 10)
 		if !errors.Is(err, ErrFileDoesNotExist) {
 			t.Errorf("Expected ErrFileDoesNotExist, got %v", err)
+		}
+	})
+
+	t.Run("Offset exceeds file size", func(t *testing.T) {
+		dir, outFile := prepareTestDir(t)
+		defer dropTempFolder(t, dir)
+
+		err := Copy("testdata/input.txt", outFile, 999999, 0)
+		fmt.Println(err)
+		if !errors.Is(err, ErrOffsetExceedsFileSize) {
+			t.Errorf("Expected ErrOffsetExceedsFileSize, got %v", err)
 		}
 	})
 }

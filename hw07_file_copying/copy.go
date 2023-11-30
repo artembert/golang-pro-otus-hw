@@ -31,11 +31,6 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 		return ErrFileRead
 	}
 
-	if err != nil {
-		fmt.Println("error seeking file:", err)
-		return ErrOffsetExceedsFileSize
-	}
-
 	distFile, err := os.Create(toPath)
 	if err != nil {
 		fmt.Println("error creating file:", err)
@@ -70,6 +65,15 @@ func openFile(path string, offset int64) (*os.File, error) {
 			return nil, ErrFileDoesNotExist
 		} else {
 			return nil, ErrUnsupportedFile
+		}
+	}
+	if offset > 0 {
+		fileInfo, err := file.Stat()
+		if err != nil {
+			return nil, err
+		}
+		if offset > fileInfo.Size() {
+			return nil, ErrOffsetExceedsFileSize
 		}
 	}
 	_, err = file.Seek(offset, io.SeekStart)
