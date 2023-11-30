@@ -35,4 +35,34 @@ func TestCopy(t *testing.T) {
 			t.Errorf("Expected nil, got %v", err)
 		}
 	})
+
+	t.Run("Offset: 10, Limit: 0", func(t *testing.T) {
+		dir, outFile := prepareTestDir(t)
+		defer dropTempFolder(t, dir)
+
+		err := Copy("testdata/input.txt", outFile, 10, 0)
+		if err != nil {
+			t.Errorf("Expected nil, got %v", err)
+		}
+	})
+
+	t.Run("Offset: 0, Limit: 10", func(t *testing.T) {
+		dir, outFile := prepareTestDir(t)
+		defer dropTempFolder(t, dir)
+
+		err := Copy("testdata/input.txt", outFile, 0, 10)
+		if err != nil {
+			t.Errorf("Expected nil, got %v", err)
+		}
+	})
+
+	t.Run("Offset: 10, Limit: 10", func(t *testing.T) {
+		dir, outFile := prepareTestDir(t)
+		defer dropTempFolder(t, dir)
+
+		err := Copy("testdata/input.txt", outFile, 10, 10)
+		if err != nil {
+			t.Errorf("Expected nil, got %v", err)
+		}
+	})
 }
