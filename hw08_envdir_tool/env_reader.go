@@ -43,10 +43,10 @@ func ReadDir(dir string) (Environment, error) {
 	for _, entry := range entries {
 		info, err := entry.Info()
 		if err != nil {
-			break
+			continue
 		}
 		if info.IsDir() {
-			break
+			continue
 		}
 		env, err := getEnvFromFile(dir, info.Name())
 		if err == nil {
