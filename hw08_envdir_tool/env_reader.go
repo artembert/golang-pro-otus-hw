@@ -10,9 +10,7 @@ import (
 	"strings"
 )
 
-var (
-	ErrNoFileContentFound = errors.New("no file content found")
-)
+var ErrNoFileContentFound = errors.New("no file content found")
 
 type Environment map[string]EnvValue
 
@@ -23,7 +21,7 @@ type EnvValue struct {
 }
 
 func ToPairsSlice(env Environment) []string {
-	var pairs []string
+	pairs := make([]string, 0, len(env))
 	for key, value := range env {
 		pairs = append(pairs, key+"="+value.Value)
 	}
