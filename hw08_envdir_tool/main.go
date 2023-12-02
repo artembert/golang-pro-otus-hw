@@ -15,8 +15,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("envs from folder: ", envs)
-	// TODO: pass stdin and stdout, stderr to command
+
 	returnCode := RunCmd(commandWithArgs, envs)
 	fmt.Printf("Command \"%s\" finished with signal: %d \n", strings.Join(commandWithArgs, " "), returnCode)
 	os.Exit(returnCode)

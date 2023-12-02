@@ -1,5 +1,18 @@
 package main
 
+import (
+	"bufio"
+	"errors"
+	"fmt"
+	"os"
+	"path"
+	"strings"
+)
+
+var (
+	ErrNoFileContentFound = errors.New("no file content found")
+)
+
 type Environment map[string]EnvValue
 
 // EnvValue helps to distinguish between empty files and files with the first empty line.
@@ -20,8 +33,54 @@ func ToPairsSlice(env Environment) []string {
 // Variables represented as files where filename is name of variable, file first line is a value.
 func ReadDir(dir string) (Environment, error) {
 	if dir == "" {
-		return Environment{}, nil
+		return nil, nil
 	}
-	// TODO: prepare envs from dir
-	return nil, nil
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		fmt.Println("error while reading dir: ", err)
+		return nil, err
+	}
+	envs := Environment{}
+	for _, entry := range entries {
+		info, err := entry.Info()
+		if err != nil {
+			break
+		}
+		if info.IsDir() {
+			break
+		}
+		env, err := getEnvFromFile(dir, info.Name())
+		if err == nil {
+			envs[entry.Name()] = env
+		}
+	}
+	return envs, nil
+}
+
+func getEnvFromFile(dir, fileName string) (EnvValue, error) {
+	file, err := os.Open(path.Join(dir, fileName))
+	if err != nil {
+		return EnvValue{}, err
+	}
+	defer file.Close()
+
+	stat, err := file.Stat()
+	if err != nil {
+		return EnvValue{}, err
+	}
+	if stat.Size() == 0 {
+		return EnvValue{Value: "", NeedRemove: true}, nil
+	}
+
+	fileScanner := bufio.NewScanner(file)
+
+	for fileScanner.Scan() {
+		text := fileScanner.Text()
+
+		strings.TrimRight(text, " ")
+		strings.TrimRight(text, "\t")
+		strings.ReplaceAll(text, "0x00", "\n")
+		return EnvValue{Value: text, NeedRemove: false}, nil
+	}
+	return EnvValue{}, ErrNoFileContentFound
 }
