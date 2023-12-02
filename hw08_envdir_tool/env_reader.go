@@ -8,6 +8,14 @@ type EnvValue struct {
 	NeedRemove bool
 }
 
+func ToPairsSlice(env Environment) []string {
+	var pairs []string
+	for key, value := range env {
+		pairs = append(pairs, key+"="+value.Value)
+	}
+	return pairs
+}
+
 // ReadDir reads a specified directory and returns map of env variables.
 // Variables represented as files where filename is name of variable, file first line is a value.
 func ReadDir(dir string) (Environment, error) {

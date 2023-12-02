@@ -7,9 +7,9 @@ import (
 )
 
 func main() {
-	argsWithoutProp := os.Args[1:]
-	envDevPath := argsWithoutProp[0]
-	commandWithArgs := argsWithoutProp[1:]
+	args := os.Args[1:]
+	envDevPath := args[0]
+	commandWithArgs := args[1:]
 
 	envs, err := ReadDir(envDevPath)
 	if err != nil {
