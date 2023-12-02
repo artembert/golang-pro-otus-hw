@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -17,7 +18,6 @@ func main() {
 	fmt.Println("envs from folder: ", envs)
 	// TODO: pass stdin and stdout, stderr to command
 	returnCode := RunCmd(commandWithArgs, envs)
-	// TODO: pass exit code from command outside
-	fmt.Println("Command finished with signal: ", returnCode)
-
+	fmt.Printf("Command \"%s\" finished with signal: %d \n", strings.Join(commandWithArgs, " "), returnCode)
+	os.Exit(returnCode)
 }
