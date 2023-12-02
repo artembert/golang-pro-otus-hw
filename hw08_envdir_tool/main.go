@@ -1,9 +1,7 @@
 package main
 
 import (
-	"fmt"
 	"os"
-	"strings"
 )
 
 func main() {
@@ -17,6 +15,5 @@ func main() {
 	}
 
 	returnCode := RunCmd(commandWithArgs, envs)
-	fmt.Printf("Command \"%s\" finished with signal: %d \n", strings.Join(commandWithArgs, " "), returnCode)
 	os.Exit(returnCode)
 }
