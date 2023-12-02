@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"errors"
 	"fmt"
 	"os"
@@ -76,10 +77,9 @@ func getEnvFromFile(dir, fileName string) (EnvValue, error) {
 
 	for fileScanner.Scan() {
 		text := fileScanner.Text()
-
-		strings.TrimRight(text, " ")
-		strings.TrimRight(text, "\t")
-		strings.ReplaceAll(text, "0x00", "\n")
+		text = strings.TrimRight(text, " ")
+		text = strings.TrimRight(text, "\t")
+		text = string(bytes.ReplaceAll([]byte(text), []byte("\x00"), []byte("\n")))
 		return EnvValue{Value: text, NeedRemove: false}, nil
 	}
 	return EnvValue{}, ErrNoFileContentFound
