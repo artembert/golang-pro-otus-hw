@@ -25,7 +25,7 @@ func RunCmd(cmd []string, env Environment) (returnCode int) {
 	if err != nil {
 		var exitError *exec.ExitError
 		if errors.As(err, &exitError) {
-			return err.(*exec.ExitError).ExitCode()
+			return exitError.ExitCode()
 		}
 		panic(err)
 	}
