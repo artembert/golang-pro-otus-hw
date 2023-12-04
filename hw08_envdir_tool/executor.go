@@ -19,7 +19,8 @@ func RunCmd(cmd []string, env Environment) (returnCode int) {
 
 	err := command.Start()
 	if err != nil {
-		panic(err)
+		fmt.Println("error while starting command: ", err)
+		return -1
 	}
 	err = command.Wait()
 	if err != nil {
@@ -27,7 +28,8 @@ func RunCmd(cmd []string, env Environment) (returnCode int) {
 		if errors.As(err, &exitError) {
 			return exitError.ExitCode()
 		}
-		panic(err)
+		fmt.Println("error while starting command: ", err)
+		return -1
 	}
 	return
 }
