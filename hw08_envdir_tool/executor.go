@@ -10,7 +10,7 @@ import (
 // RunCmd runs a command + arguments (cmd) with environment variables from env.
 func RunCmd(cmd []string, env Environment) (returnCode int) {
 	processEnvs(env)
-	command := exec.Command(cmd[0]) // #nosec G204
+	command := exec.Command(cmd[0], cmd[1:]...) // #nosec G204
 	command.Env = append(os.Environ(), ToPairsSlice(env)...)
 
 	command.Stdout = os.Stdout
