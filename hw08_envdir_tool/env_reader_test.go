@@ -70,7 +70,19 @@ func TestReadDir(t *testing.T) {
 
 		config := envs["FOO"]
 		if config.Value != "   foo\nwith new line" {
-			t.Errorf("Expected '', got '%v'", config.Value)
+			t.Errorf("Expected '   foo\nwith new line', got '%v'", config.Value)
+		}
+		if config.NeedRemove != false {
+			t.Errorf("Expected NeedRemove == 'false', got '%v'", config.NeedRemove)
+		}
+	})
+
+	t.Run("Preserve quotes", func(t *testing.T) {
+		envs, _ := ReadDir(envsPath)
+
+		config := envs["HELLO"]
+		if config.Value != "\"hello\"" {
+			t.Errorf("Expected '\"hello\"', got '%v'", config.Value)
 		}
 		if config.NeedRemove != false {
 			t.Errorf("Expected NeedRemove == 'false', got '%v'", config.NeedRemove)
