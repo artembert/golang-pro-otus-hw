@@ -37,7 +37,7 @@ func TestReadDir(t *testing.T) {
 		envs, _ := ReadDir(dir)
 
 		if len(envs) != 0 {
-			t.Errorf("Expected empty map, got %v", envs)
+			t.Errorf("Expected empty map, got '%v'", envs)
 		}
 	})
 
@@ -46,10 +46,10 @@ func TestReadDir(t *testing.T) {
 
 		config := envs["BAR"]
 		if config.Value != "bar" {
-			t.Errorf("Expected 'bar', got %v", config.Value)
+			t.Errorf("Expected 'bar', got '%v'", config.Value)
 		}
 		if config.NeedRemove != false {
-			t.Errorf("Expected NeedRemove == 'false', got %v", config.NeedRemove)
+			t.Errorf("Expected NeedRemove == 'false', got '%v'", config.NeedRemove)
 		}
 	})
 
@@ -58,10 +58,22 @@ func TestReadDir(t *testing.T) {
 
 		config := envs["EMPTY"]
 		if config.Value != "" {
-			t.Errorf("Expected '', got %v", config.Value)
+			t.Errorf("Expected '', got '%v'", config.Value)
 		}
 		if config.NeedRemove != false {
-			t.Errorf("Expected NeedRemove == 'false', got %v", config.NeedRemove)
+			t.Errorf("Expected NeedRemove == 'false', got '%v'", config.NeedRemove)
+		}
+	})
+
+	t.Run("Replace null-terminated strings with \\n", func(t *testing.T) {
+		envs, _ := ReadDir(envsPath)
+
+		config := envs["FOO"]
+		if config.Value != "   foo\nwith new line" {
+			t.Errorf("Expected '', got '%v'", config.Value)
+		}
+		if config.NeedRemove != false {
+			t.Errorf("Expected NeedRemove == 'false', got '%v'", config.NeedRemove)
 		}
 	})
 
@@ -70,10 +82,10 @@ func TestReadDir(t *testing.T) {
 
 		config := envs["UNSET"]
 		if config.Value != "" {
-			t.Errorf("Expected '', got %v", config.Value)
+			t.Errorf("Expected '', got '%v'", config.Value)
 		}
 		if config.NeedRemove != true {
-			t.Errorf("Expected NeedRemove == 'true', got %v", config.NeedRemove)
+			t.Errorf("Expected NeedRemove == 'true', got '%v'", config.NeedRemove)
 		}
 	})
 }
