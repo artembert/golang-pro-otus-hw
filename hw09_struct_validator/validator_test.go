@@ -23,6 +23,10 @@ type (
 		Version string `validate:"len:5"`
 	}
 
+	Config struct {
+		PreferredLanguage string `validate:""`
+	}
+
 	Token struct {
 		Header    []byte
 		Payload   []byte
@@ -42,9 +46,6 @@ func TestValidate(t *testing.T) {
 		if err != nil {
 			t.Errorf("Expected nil, got %v", err)
 		}
-		//if returnCode != 42 {
-		//	t.Errorf("Expected return code 42, got %v", returnCode)
-		//}
 	})
 }
 

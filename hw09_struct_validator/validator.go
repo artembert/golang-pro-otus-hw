@@ -1,13 +1,8 @@
 package hw09structvalidator
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
-)
-
-var (
-	ErrEmptyValidationTag = errors.New("empty validation rule")
 )
 
 type ValidationError struct {
@@ -22,14 +17,14 @@ func (v ValidationErrors) Error() string {
 }
 
 func Validate(v interface{}) error {
-	TagName := "validate"
 	st := reflect.TypeOf(v)
 	for i := 0; i < st.NumField(); i++ {
 		field := st.Field(i)
-		if rule, ok := field.Tag.Lookup(TagName); ok {
-			if rule == "" {
-				fmt.Println(ErrEmptyValidationTag)
-			} else {
+		rule, err := SelectValidateRule(field)
+		if err != nil {
+			return err
+		} else {
+			if rule != "" {
 				fmt.Println(rule)
 			}
 		}
