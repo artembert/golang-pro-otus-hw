@@ -2,7 +2,6 @@ package hw09structvalidator
 
 import (
 	"encoding/json"
-	"fmt"
 	"testing"
 )
 
@@ -37,24 +36,37 @@ type (
 )
 
 func TestValidate(t *testing.T) {
-	tests := []struct {
-		in          interface{}
-		expectedErr error
-	}{
-		{
-			// Place your code here.
-		},
-		// ...
-		// Place your code here.
-	}
-
-	for i, tt := range tests {
-		t.Run(fmt.Sprintf("case %d", i), func(t *testing.T) {
-			tt := tt
-			t.Parallel()
-
-			// Place your code here.
-			_ = tt
-		})
-	}
+	t.Run("Should return struct tag content", func(t *testing.T) {
+		user := User{}
+		err := Validate(user)
+		if err != nil {
+			t.Errorf("Expected nil, got %v", err)
+		}
+		//if returnCode != 42 {
+		//	t.Errorf("Expected return code 42, got %v", returnCode)
+		//}
+	})
 }
+
+//func TestValidate(t *testing.T) {
+//	tests := []struct {
+//		in          interface{}
+//		expectedErr error
+//	}{
+//		{
+//			// Place your code here.
+//		},
+//		// ...
+//		// Place your code here.
+//	}
+//
+//	for i, tt := range tests {
+//		t.Run(fmt.Sprintf("case %d", i), func(t *testing.T) {
+//			tt := tt
+//			t.Parallel()
+//
+//			// Place your code here.
+//			_ = tt
+//		})
+//	}
+//}
