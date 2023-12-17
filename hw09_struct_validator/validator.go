@@ -21,13 +21,15 @@ func Validate(v interface{}) error {
 	for i := 0; i < st.NumField(); i++ {
 		field := st.Field(i)
 		rule, err := SelectValidateRule(field)
+
 		if err != nil {
 			return err
-		} else {
-			if rule != "" {
-				fmt.Println(rule)
-			}
 		}
+		if rule == "" {
+			continue
+		}
+		valueType := reflect.ValueOf(v).Field(i).Kind()
+		fmt.Println(rule, valueType)
 	}
 	return nil
 }
