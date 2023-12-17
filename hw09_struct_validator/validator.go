@@ -30,6 +30,13 @@ func Validate(v interface{}) error {
 		}
 		valueType := reflect.ValueOf(v).Field(i).Kind()
 		fmt.Println(rule, valueType)
+		switch valueType {
+		case reflect.String:
+		case reflect.Int:
+		case reflect.Slice:
+			fmt.Println("slice of ", reflect.ValueOf(v).Field(i).Type())
+		default:
+		}
 	}
 	return nil
 }
