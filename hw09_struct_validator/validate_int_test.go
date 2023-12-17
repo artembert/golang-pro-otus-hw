@@ -6,19 +6,7 @@ import (
 )
 
 func TestValidateInt(t *testing.T) {
-	t.Run("should split multiple rules", func(t *testing.T) {
-		rulesSet := []string{"min:18|max:50", "in:13,17", "min:18|max:50|in:13,17"}
-		for _, rule := range rulesSet {
-			_, parsingErrors := ValidateInt(1, rule)
-
-			if parsingErrors != nil {
-				t.Errorf("unexpected parsing error, %v", parsingErrors)
-			}
-		}
-
-	})
-
-	t.Run("should support single condition", func(t *testing.T) {
+	t.Run("should support single constraint", func(t *testing.T) {
 		cases := []struct {
 			name           string
 			value          int
@@ -75,6 +63,49 @@ func TestValidateInt(t *testing.T) {
 					}
 				}
 			})
+		}
+	})
+
+	t.Run("should support multiple constraints", func(t *testing.T) {
+		cases := []struct {
+			name           string
+			value          int
+			validationRule string
+			expectedErrors []error
+		}{
+			{
+				name:           "✅Valid: min|in",
+				value:          13,
+				validationRule: "min:10|in:13,17",
+				expectedErrors: []error{},
+			},
+			{
+				name:           "⚠️Invalid: min|in",
+				value:          9,
+				validationRule: "min:10|in:13,17",
+				expectedErrors: []error{ErrMinConstraint, ErrAvailableValues},
+			},
+		}
+
+		for _, testCase := range cases {
+			t.Run(testCase.name, func(t *testing.T) {
+				validationErrors, parsingErrors := ValidateInt(testCase.value, testCase.validationRule)
+				if parsingErrors != nil {
+					t.Errorf("unexpected parsing error, %v", parsingErrors)
+				}
+				for i, err := range validationErrors {
+					if !errors.Is(testCase.expectedErrors[i], err) {
+						t.Errorf("unexpected validation error, %v", parsingErrors)
+					}
+				}
+			})
+		}
+	})
+
+	t.Run("should throw parsing errors", func(t *testing.T) {
+		_, parsingErrors := ValidateInt(76, "min:")
+		if !errors.Is(parsingErrors, ErrUnknownRule) {
+			t.Errorf("parcing error expected, %v", parsingErrors)
 		}
 	})
 }

@@ -1,7 +1,6 @@
 package hw09structvalidator
 
 import (
-	"fmt"
 	"slices"
 	"strconv"
 	"strings"
@@ -14,7 +13,7 @@ func ValidateInt(val int, rule string) (validationError []error, parsingError er
 		if rulePair[0] == "" || rulePair[1] == "" {
 			return nil, ErrUnknownRule
 		}
-		fmt.Println(rulePair)
+
 		switch rulePair[0] {
 		case "min":
 			minInt, err := strconv.Atoi(rulePair[1])
