@@ -28,8 +28,8 @@ func Validate(v interface{}) error {
 		if rule == "" {
 			continue
 		}
+
 		valueType := reflect.ValueOf(v).Field(i).Kind()
-		fmt.Println(rule, valueType)
 		switch valueType {
 		case reflect.String:
 		case reflect.Int:
