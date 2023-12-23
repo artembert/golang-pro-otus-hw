@@ -1,6 +1,7 @@
 package hw09structvalidator
 
 import (
+	"regexp"
 	"slices"
 	"strconv"
 	"strings"
@@ -28,14 +29,14 @@ func ValidateString(val string, rule string) (validationErr []error, parsingErr 
 			if !slices.Contains(availableValues, val) {
 				validationErrors = append(validationErrors, ErrAvailableValues{Constraint: availableValues, GivenValue: val})
 			}
-			//case "regexp":
-			//	maxInt, err := strconv.Atoi(rulePair[1])
-			//	if err != nil {
-			//		return nil, ErrParsingRule{Rule: rule}
-			//	}
-			//	if val > maxInt {
-			//		validationErrors = append(validationErrors, ErrMaxConstraint{Constraint: maxInt, GivenValue: val})
-			//	}
+		case "regexp":
+			rg, err := regexp.Compile(rulePair[1])
+			if err != nil {
+				return nil, ErrParsingRule{Rule: rule}
+			}
+			if !rg.Match([]byte(val)) {
+				validationErrors = append(validationErrors, ErrRegexp{GivenValue: val, Constraint: rule})
+			}
 		}
 	}
 

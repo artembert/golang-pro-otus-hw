@@ -83,3 +83,12 @@ type ErrLengthConstraint struct {
 func (e ErrLengthConstraint) Error() string {
 	return fmt.Sprintf("Value '%v' of length '%v' not equal to: %v which is required", e.GivenValue, len(e.GivenValue), e.Constraint)
 }
+
+type ErrRegexp struct {
+	Constraint string
+	GivenValue string
+}
+
+func (e ErrRegexp) Error() string {
+	return fmt.Sprintf("Value '%v' is not satisfied regexp rules '%s'", e.GivenValue, e.Constraint)
+}

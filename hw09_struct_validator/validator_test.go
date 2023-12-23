@@ -34,6 +34,11 @@ type (
 		PreferredLanguage string `validate:""`
 	}
 
+	Contacts struct {
+		Email        string `validate:"regexp:^\\w+@\\w+\\.\\w+$"`
+		WorkingEmail string `validate:"regexp:^\\w+@\\w+\\.\\w+$"`
+	}
+
 	Token struct {
 		Header    []byte
 		Payload   []byte
@@ -98,6 +103,16 @@ func TestValidate(t *testing.T) {
 			expectedErr: ValidationErrors{
 				ValidationError{Field: "Version", Err: ErrLengthConstraint{Constraint: 5, GivenValue: "1.1"}},
 				ValidationError{Field: "Env", Err: ErrAvailableValues{Constraint: []string{"dev", "prod"}, GivenValue: "production"}},
+			}.Error(),
+		},
+		{
+			name: "RegExp validation",
+			examine: Contacts{
+				Email:        "testadmin@corp.com",
+				WorkingEmail: "test-admin@corp",
+			},
+			expectedErr: ValidationErrors{
+				ValidationError{Field: "WorkingEmail", Err: ErrRegexp{Constraint: "regexp:^\\w+@\\w+\\.\\w+$", GivenValue: "test-admin@corp"}},
 			}.Error(),
 		},
 	}
