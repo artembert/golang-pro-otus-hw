@@ -1,7 +1,6 @@
 package hw09structvalidator
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -41,7 +40,7 @@ func Validate(v interface{}) error {
 			if fieldErrors != nil {
 				validationErrors = append(validationErrors, ValidationError{
 					Field: field.Name,
-					Err:   errors.Join(fieldErrors...),
+					Err:   joinErrors(fieldErrors...), // errors.Join(fieldErrors...) in Go v1.20
 				})
 			}
 		case reflect.Int:
@@ -55,7 +54,7 @@ func Validate(v interface{}) error {
 			if fieldErrors != nil {
 				validationErrors = append(validationErrors, ValidationError{
 					Field: field.Name,
-					Err:   errors.Join(fieldErrors...),
+					Err:   joinErrors(fieldErrors...), // errors.Join(fieldErrors...) in Go v1.20
 				})
 			}
 		case reflect.Slice:
@@ -96,7 +95,7 @@ func validateSlice(
 			if validationResult != nil {
 				validationErrors = append(validationErrors, ValidationError{
 					Field: fmt.Sprintf("%s[%s]", fieldName, val),
-					Err:   errors.Join(validationResult...),
+					Err:   joinErrors(validationResult...), // errors.Join(fieldErrors...) in Go v1.20
 				})
 			}
 		}
@@ -112,7 +111,7 @@ func validateSlice(
 			if validationResult != nil {
 				validationErrors = append(validationErrors, ValidationError{
 					Field: fmt.Sprintf("%s[%s]", fieldName, strconv.FormatInt(int64(val), 10)),
-					Err:   errors.Join(validationResult...),
+					Err:   joinErrors(validationResult...), // errors.Join(fieldErrors...) in Go v1.20
 				})
 			}
 		}

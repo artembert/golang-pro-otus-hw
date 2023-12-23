@@ -97,3 +97,21 @@ type ErrRegexp struct {
 func (e ErrRegexp) Error() string {
 	return fmt.Sprintf("Value '%v' is not satisfied regexp rules '%s'", e.GivenValue, e.Constraint)
 }
+
+func joinErrors(errs ...error) error {
+	s := make([]string, 0, len(errs))
+	nonNilErrs := make([]any, 0, len(errs))
+	for _, err := range errs {
+		if err == nil {
+			continue
+		}
+		s = append(s, "%w")
+		nonNilErrs = append(nonNilErrs, err)
+	}
+	// If all the errors were nil, return nil.
+	if len(nonNilErrs) == 0 {
+		return nil
+	}
+	allErrs := strings.Join(s, "\n")
+	return fmt.Errorf(allErrs, nonNilErrs...)
+}
