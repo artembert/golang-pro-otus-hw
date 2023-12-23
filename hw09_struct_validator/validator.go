@@ -91,7 +91,9 @@ func Validate(v interface{}) error {
 						})
 					}
 				}
+			default:
 			}
+		default:
 		}
 	}
 
