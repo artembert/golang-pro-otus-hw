@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"strconv"
 )
 
 func Validate(v interface{}) error {
@@ -76,7 +77,20 @@ func Validate(v interface{}) error {
 						})
 					}
 				}
-				//case reflect.Int:
+			case reflect.Int:
+				for sliceElIndex := 0; sliceElIndex < valueOfStruct.Field(i).Len(); sliceElIndex++ {
+					val := int(slice.Index(sliceElIndex).Int())
+					validationResult, parsingError := ValidateInt(val, rule)
+					if parsingError != nil {
+						return parsingError
+					}
+					if validationResult != nil {
+						validationErrors = append(validationErrors, ValidationError{
+							Field: fmt.Sprintf("%s[%s]", field.Name, strconv.FormatInt(int64(val), 10)),
+							Err:   errors.Join(validationResult...),
+						})
+					}
+				}
 			}
 		}
 	}

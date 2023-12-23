@@ -131,6 +131,8 @@ func TestValidate(t *testing.T) {
 			expectedErr: ValidationErrors{
 				ValidationError{Field: "Phones[54-555-123]", Err: ErrLengthConstraint{Constraint: 11, GivenValue: "54-555-123"}},
 				ValidationError{Field: "Phones[554555-123]", Err: ErrLengthConstraint{Constraint: 11, GivenValue: "554555-123"}},
+				ValidationError{Field: "BirthDate[-30]", Err: ErrMinConstraint{Constraint: 0, GivenValue: -30}},
+				ValidationError{Field: "BirthDate[2050]", Err: ErrMaxConstraint{Constraint: 2040, GivenValue: 2050}},
 			}.Error(),
 		},
 	}
