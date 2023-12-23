@@ -29,6 +29,12 @@ func Validate(v interface{}) error {
 		valueType := valueOfStruct.Field(i).Kind()
 		switch valueType {
 		case reflect.String:
+			val := valueOfStruct.Field(i).String()
+			validationResult, parsingError := ValidateString(val, rule)
+			if parsingError != nil {
+				return parsingError
+			}
+			fieldErrors = validationResult
 		case reflect.Int:
 			val := int(valueOfStruct.Field(i).Int())
 			validationResult, parsingError := ValidateInt(val, rule)

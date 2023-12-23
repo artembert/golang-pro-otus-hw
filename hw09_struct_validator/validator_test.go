@@ -24,7 +24,10 @@ type (
 	}
 
 	App struct {
-		Version string `validate:"len:5"`
+		Version     string `validate:"len:5"`
+		ReleaseDate string `validate:"len:10"`
+		Env         string `validate:"in:dev,prod"`
+		Pod         string `validate:"in:us1,us2,ca1"`
 	}
 
 	Config struct {
@@ -82,6 +85,19 @@ func TestValidate(t *testing.T) {
 			expectedErr: ValidationErrors{
 				ValidationError{Field: "Width", Err: ErrMinConstraint{Constraint: 7, GivenValue: 6}},
 				ValidationError{Field: "Length", Err: ErrMaxConstraint{Constraint: 23, GivenValue: 24}},
+			}.Error(),
+		},
+		{
+			name: "String validation",
+			examine: App{
+				Version:     "1.1",
+				ReleaseDate: "2023-07-13",
+				Env:         "production",
+				Pod:         "ca1",
+			},
+			expectedErr: ValidationErrors{
+				ValidationError{Field: "Version", Err: ErrLengthConstraint{Constraint: 5, GivenValue: "1.1"}},
+				ValidationError{Field: "Env", Err: ErrAvailableValues{Constraint: []string{"dev", "prod"}, GivenValue: "production"}},
 			}.Error(),
 		},
 	}

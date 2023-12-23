@@ -11,10 +11,6 @@ var (
 	ErrNotAStruct         = errors.New("not a type of structure")
 )
 
-var (
-	ErrLengthConstraint = errors.New("value is longer then allowed")
-)
-
 type ValidationError struct {
 	Field string
 	Err   error
@@ -77,4 +73,13 @@ type ErrAvailableValues struct {
 
 func (e ErrAvailableValues) Error() string {
 	return fmt.Sprintf("Value '%v' is out of available values: [%v]", e.GivenValue, strings.Join(e.Constraint, ", "))
+}
+
+type ErrLengthConstraint struct {
+	Constraint int
+	GivenValue string
+}
+
+func (e ErrLengthConstraint) Error() string {
+	return fmt.Sprintf("Value '%v' of length '%v' not equal to: %v which is required", e.GivenValue, len(e.GivenValue), e.Constraint)
 }
