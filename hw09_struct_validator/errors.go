@@ -33,7 +33,7 @@ func (v ValidationErrors) Error() string {
 	builder := strings.Builder{}
 
 	for _, err := range v {
-		builder.WriteString(fmt.Sprintf("%s", err.Error()))
+		builder.WriteString(fmt.Sprintf("%s\n", err.Error()))
 	}
 
 	return builder.String()

@@ -2,8 +2,10 @@ package hw09structvalidator
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 type UserRole string
@@ -39,47 +41,60 @@ type (
 		Code int    `validate:"in:200,404,500"`
 		Body string `json:"omitempty"`
 	}
+
+	SizesCorrupted struct {
+		Height int `validate:"min:"`
+		Width  int `validate:"min:7"`
+		Length int `validate:"max:23"`
+	}
+
+	Sizes struct {
+		Height int `validate:"min:5"`
+		Width  int `validate:"min:7"`
+		Length int `validate:"max:23"`
+	}
 )
 
 func TestValidate(t *testing.T) {
-	t.Run("Should return struct tag content", func(t *testing.T) {
-		user := User{Age: 18}
-		err := Validate(user)
-		if err != nil {
-			t.Errorf("Expected nil, got %v", err)
-		}
-	})
+	tests := []struct {
+		name        string
+		examine     interface{}
+		expectedErr string
+	}{
+		{
+			name: "Parsing rule error",
+			examine: SizesCorrupted{
+				Height: 21,
+				Width:  6,
+				Length: 24,
+			},
+			expectedErr: ErrParsingRule{
+				Rule: "min:",
+			}.Error(),
+		},
+		{
+			name: "Int validation",
+			examine: Sizes{
+				Height: 21,
+				Width:  6,
+				Length: 24,
+			},
+			expectedErr: ValidationErrors{
+				ValidationError{Field: "Width", Err: ErrMinConstraint},
+				ValidationError{Field: "Length", Err: ErrMaxConstraint},
+			}.Error(),
+		},
+	}
 
-	t.Run("Should return validation errors for int", func(t *testing.T) {
-		user := User{Age: 17}
-		validationErrors := Validate(user)
-		//errors.Unwrap(validationErrors)
-		if !errors.Is(validationErrors, ErrMinConstraint) {
-			t.Errorf("Expected validation error '%s', but got '%s'", ErrMinConstraint, validationErrors)
-		}
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf(tt.name, i), func(t *testing.T) {
+			tt := tt
+			t.Parallel()
 
-	})
+			err := Validate(tt.examine)
+
+			require.Equal(t, tt.expectedErr, err.Error())
+			_ = tt
+		})
+	}
 }
-
-//func TestValidate(t *testing.T) {
-//	tests := []struct {
-//		in          interface{}
-//		expectedErr error
-//	}{
-//		{
-//			// Place your code here.
-//		},
-//		// ...
-//		// Place your code here.
-//	}
-//
-//	for i, tt := range tests {
-//		t.Run(fmt.Sprintf("case %d", i), func(t *testing.T) {
-//			tt := tt
-//			t.Parallel()
-//
-//			// Place your code here.
-//			_ = tt
-//		})
-//	}
-//}
