@@ -9,7 +9,9 @@ import (
 
 func TestSelectValidateRule(t *testing.T) {
 	t.Run("Should return content of 'validate' struct tag", func(t *testing.T) {
-		expectedRules := []string{"len:36", "min:18|max:50", "regexp:^\\w+@\\w+\\.\\w+$", "in:admin,stuff", "len:11", "min:0|max:2040"}
+		expectedRules := []string{
+			"len:36", "min:18|max:50", "regexp:^\\w+@\\w+\\.\\w+$", "in:admin,stuff", "len:11", "min:0|max:2040",
+		}
 		var expectedErrors []error
 		user := User{}
 		st := reflect.TypeOf(user)
@@ -21,10 +23,8 @@ func TestSelectValidateRule(t *testing.T) {
 			rule, err := SelectValidateRule(field)
 			if err != nil {
 				validationErrors = append(validationErrors, err)
-			} else {
-				if rule != "" {
-					rules = append(rules, rule)
-				}
+			} else if rule != "" {
+				rules = append(rules, rule)
 			}
 		}
 
@@ -40,7 +40,10 @@ func TestSelectValidateRule(t *testing.T) {
 		}
 
 		if len(expectedErrors) != len(validationErrors) {
-			t.Errorf("Expected errors length mismatch given.\nExpected: %v\nGiven: %v", len(expectedErrors), len(validationErrors))
+			t.Errorf(
+				"Expected errors length mismatch given.\nExpected: %v\nGiven: %v",
+				len(expectedErrors), len(validationErrors),
+			)
 			t.Errorf("Expected errors mismatch given.\nExpected: %v\nGiven: %v", expectedErrors, validationErrors)
 		}
 		for i := 0; i < len(expectedErrors); i++ {
@@ -48,7 +51,6 @@ func TestSelectValidateRule(t *testing.T) {
 				t.Errorf("Expected errors mismatch given.\nExpected: %v\nGiven: %v", expectedErrors, validationErrors)
 			}
 		}
-
 	})
 
 	t.Run("Should return error on empty validation tag", func(t *testing.T) {
@@ -66,7 +68,11 @@ func TestSelectValidateRule(t *testing.T) {
 		}
 
 		if len(expectedErrors) != len(validationErrors) {
-			t.Errorf("Expected errors length mismatch given.\nExpected: %v\nGiven: %v", len(expectedErrors), len(validationErrors))
+			t.Errorf(
+				"Expected errors length mismatch given.\nExpected: %v\nGiven: %v",
+				len(expectedErrors),
+				len(validationErrors),
+			)
 			t.Errorf("Expected errors mismatch given.\nExpected: %v\nGiven: %v", expectedErrors, validationErrors)
 		}
 		for i := 0; i < len(expectedErrors); i++ {
@@ -74,6 +80,5 @@ func TestSelectValidateRule(t *testing.T) {
 				t.Errorf("Expected errors mismatch given.\nExpected: %v\nGiven: %v", expectedErrors, validationErrors)
 			}
 		}
-
 	})
 }

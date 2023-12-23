@@ -11,10 +11,9 @@ func SelectValidateRule(field reflect.StructField) (rule string, err error) {
 	if ok {
 		if rule == "" {
 			return "", ErrEmptyValidationTag
-		} else {
-			return rule, nil
 		}
-	} else {
-		return "", nil
+		return rule, nil
 	}
+
+	return "", nil
 }

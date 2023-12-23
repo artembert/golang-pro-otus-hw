@@ -17,7 +17,7 @@ type ValidationError struct {
 }
 
 func (validationError ValidationError) Error() error {
-	return fmt.Errorf("[%s]: %s", validationError.Field, validationError.Err)
+	return fmt.Errorf("[%s]: %w", validationError.Field, validationError.Err)
 }
 
 type ValidationErrors []ValidationError
@@ -81,7 +81,12 @@ type ErrLengthConstraint struct {
 }
 
 func (e ErrLengthConstraint) Error() string {
-	return fmt.Sprintf("Value '%v' of length '%v' not equal to: %v which is required", e.GivenValue, len(e.GivenValue), e.Constraint)
+	return fmt.Sprintf(
+		"Value '%v' of length '%v' not equal to: %v which is required",
+		e.GivenValue,
+		len(e.GivenValue),
+		e.Constraint,
+	)
 }
 
 type ErrRegexp struct {

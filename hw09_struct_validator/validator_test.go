@@ -108,7 +108,11 @@ func TestValidate(t *testing.T) {
 			},
 			expectedErr: ValidationErrors{
 				ValidationError{Field: "Version", Err: ErrLengthConstraint{Constraint: 5, GivenValue: "1.1"}},
-				ValidationError{Field: "Env", Err: ErrAvailableValues{Constraint: []string{"dev", "prod"}, GivenValue: "production"}},
+				ValidationError{
+					Field: "Env", Err: ErrAvailableValues{
+						Constraint: []string{"dev", "prod"}, GivenValue: "production",
+					},
+				},
 			}.Error(),
 		},
 		{
@@ -118,7 +122,11 @@ func TestValidate(t *testing.T) {
 				WorkingEmail: "test-admin@corp",
 			},
 			expectedErr: ValidationErrors{
-				ValidationError{Field: "WorkingEmail", Err: ErrRegexp{Constraint: "regexp:^\\w+@\\w+\\.\\w+$", GivenValue: "test-admin@corp"}},
+				ValidationError{
+					Field: "WorkingEmail", Err: ErrRegexp{
+						Constraint: "regexp:^\\w+@\\w+\\.\\w+$", GivenValue: "test-admin@corp",
+					},
+				},
 			}.Error(),
 		},
 		{
@@ -129,8 +137,16 @@ func TestValidate(t *testing.T) {
 				BirthDate:     []int{-30, 10, 20, 40, 2050},
 			},
 			expectedErr: ValidationErrors{
-				ValidationError{Field: "Phones[54-555-123]", Err: ErrLengthConstraint{Constraint: 11, GivenValue: "54-555-123"}},
-				ValidationError{Field: "Phones[554555-123]", Err: ErrLengthConstraint{Constraint: 11, GivenValue: "554555-123"}},
+				ValidationError{
+					Field: "Phones[54-555-123]", Err: ErrLengthConstraint{
+						Constraint: 11, GivenValue: "54-555-123",
+					},
+				},
+				ValidationError{
+					Field: "Phones[554555-123]", Err: ErrLengthConstraint{
+						Constraint: 11, GivenValue: "554555-123",
+					},
+				},
 				ValidationError{Field: "BirthDate[-30]", Err: ErrMinConstraint{Constraint: 0, GivenValue: -30}},
 				ValidationError{Field: "BirthDate[2050]", Err: ErrMaxConstraint{Constraint: 2040, GivenValue: 2050}},
 			}.Error(),
