@@ -7,7 +7,6 @@ import (
 )
 
 var (
-	ErrUnknownRule        = errors.New("unknown validation rule")
 	ErrEmptyValidationTag = errors.New("empty validation rule")
 	ErrNotAStruct         = errors.New("not a type of structure")
 )
@@ -24,22 +23,27 @@ type ValidationError struct {
 	Err   error
 }
 
-type ValidationErrors []ValidationError
-
 func (validationError ValidationError) Error() error {
 	return fmt.Errorf("[%s]: %s", validationError.Field, validationError.Err)
 }
 
+type ValidationErrors []ValidationError
+
 func (v ValidationErrors) Error() string {
-	if len(v) < 1 {
-		return "No validation errors fount"
-	}
 	builder := strings.Builder{}
-	builder.WriteString("Validation errors:")
 
 	for _, err := range v {
 		builder.WriteString(fmt.Sprintf("\n%s;", err.Error()))
 	}
 
 	return builder.String()
+}
+
+type ErrUnknownRule struct {
+	Field string
+	Tag   string
+}
+
+func (e ErrUnknownRule) Error() string {
+	return fmt.Sprintf("Unknown validator tag '%s' for field '%s'", e.Tag, e.Field)
 }

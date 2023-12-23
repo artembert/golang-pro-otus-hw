@@ -8,7 +8,7 @@ import (
 func Validate(v interface{}) error {
 	valueOfStruct := reflect.ValueOf(v)
 	typeOfStruct := reflect.TypeOf(v)
-	var validationErrors ValidationErrors
+	validationErrors := make(ValidationErrors, 0, valueOfStruct.NumField())
 
 	if valueOfStruct.Kind() != reflect.Struct {
 		return ErrNotAStruct
@@ -31,7 +31,7 @@ func Validate(v interface{}) error {
 		case reflect.String:
 		case reflect.Int:
 			val := int(valueOfStruct.Field(i).Int())
-			validationResult, parsingError := ValidateInt(val, rule)
+			validationResult, parsingError := ValidateInt(field.Name, val, rule)
 			if parsingError != nil {
 				return parsingError
 			}
