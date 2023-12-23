@@ -45,17 +45,6 @@ type (
 		BirthDate     []int    `validate:"min:0|max:2040"`
 	}
 
-	Token struct {
-		Header    []byte
-		Payload   []byte
-		Signature []byte
-	}
-
-	Response struct {
-		Code int    `validate:"in:200,404,500"`
-		Body string `json:"omitempty"`
-	}
-
 	SizesCorrupted struct {
 		Height int `validate:"min:"`
 		Width  int `validate:"min:7"`
