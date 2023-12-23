@@ -2,6 +2,7 @@ package hw09structvalidator
 
 import (
 	"errors"
+	"github.com/stretchr/testify/require"
 	"testing"
 )
 
@@ -50,7 +51,7 @@ func TestValidateInt(t *testing.T) {
 				name:           "⚠️Invalid: in",
 				value:          0,
 				validationRule: "in:18,12",
-				expectedErrors: []error{ErrAvailableValues},
+				expectedErrors: []error{ErrAvailableValues{Constraint: []string{"18", "12"}, GivenValue: "0"}},
 			},
 		}
 
@@ -61,9 +62,7 @@ func TestValidateInt(t *testing.T) {
 					t.Errorf("unexpected parsing error, %v", parsingErrors)
 				}
 				for i, err := range validationErrors {
-					if !errors.Is(testCase.expectedErrors[i], err) {
-						t.Errorf("unexpected validation error, %v", parsingErrors)
-					}
+					require.Equal(t, testCase.expectedErrors[i], err)
 				}
 			})
 		}
@@ -86,7 +85,7 @@ func TestValidateInt(t *testing.T) {
 				name:           "⚠️Invalid: min|in",
 				value:          9,
 				validationRule: "min:10|in:13,17",
-				expectedErrors: []error{ErrMinConstraint{Constraint: 10, GivenValue: 9}, ErrAvailableValues},
+				expectedErrors: []error{ErrMinConstraint{Constraint: 10, GivenValue: 9}, ErrAvailableValues{Constraint: []string{"13", "17"}, GivenValue: "9"}},
 			},
 		}
 
@@ -97,9 +96,7 @@ func TestValidateInt(t *testing.T) {
 					t.Errorf("unexpected parsing error, %v", parsingErrors)
 				}
 				for i, err := range validationErrors {
-					if !errors.Is(testCase.expectedErrors[i], err) {
-						t.Errorf("unexpected validation error, %v", parsingErrors)
-					}
+					require.Equal(t, testCase.expectedErrors[i], err)
 				}
 			})
 		}

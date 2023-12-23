@@ -33,8 +33,9 @@ func ValidateInt(val int, rule string) (validationErr []error, parsingErr error)
 			}
 		case "in":
 			availableValues := strings.Split(rulePair[1], ",")
-			if !slices.Contains(availableValues, strconv.FormatInt(int64(val), 10)) {
-				validationErrors = append(validationErrors, ErrAvailableValues)
+			valString := strconv.FormatInt(int64(val), 10)
+			if !slices.Contains(availableValues, valString) {
+				validationErrors = append(validationErrors, ErrAvailableValues{Constraint: availableValues, GivenValue: valString})
 			}
 		}
 	}

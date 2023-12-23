@@ -12,7 +12,6 @@ var (
 )
 
 var (
-	ErrAvailableValues  = errors.New("out of available values")
 	ErrLengthConstraint = errors.New("value is longer then allowed")
 )
 
@@ -69,4 +68,13 @@ type ErrMaxConstraint struct {
 
 func (e ErrMaxConstraint) Error() string {
 	return fmt.Sprintf("Given value '%v' is bigger then max: '%v'", e.GivenValue, e.Constraint)
+}
+
+type ErrAvailableValues struct {
+	Constraint []string
+	GivenValue string
+}
+
+func (e ErrAvailableValues) Error() string {
+	return fmt.Sprintf("Value '%v' is out of available values: [%v]", e.GivenValue, strings.Join(e.Constraint, ", "))
 }
