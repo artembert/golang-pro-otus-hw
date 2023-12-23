@@ -53,7 +53,7 @@ func TestValidateInt(t *testing.T) {
 
 		for _, testCase := range cases {
 			t.Run(testCase.name, func(t *testing.T) {
-				validationErrors, parsingErrors := ValidateInt("", testCase.value, testCase.validationRule)
+				validationErrors, parsingErrors := ValidateInt(testCase.value, testCase.validationRule)
 				if parsingErrors != nil {
 					t.Errorf("unexpected parsing error, %v", parsingErrors)
 				}
@@ -89,7 +89,7 @@ func TestValidateInt(t *testing.T) {
 
 		for _, testCase := range cases {
 			t.Run(testCase.name, func(t *testing.T) {
-				validationErrors, parsingErrors := ValidateInt("", testCase.value, testCase.validationRule)
+				validationErrors, parsingErrors := ValidateInt(testCase.value, testCase.validationRule)
 				if parsingErrors != nil {
 					t.Errorf("unexpected parsing error, %v", parsingErrors)
 				}
@@ -103,10 +103,9 @@ func TestValidateInt(t *testing.T) {
 	})
 
 	t.Run("should throw parsing errors", func(t *testing.T) {
-		_, parsingErrors := ValidateInt("", 76, "min:")
-		if !errors.Is(parsingErrors, ErrUnknownRule{
-			Field: "",
-			Tag:   "min:",
+		_, parsingErrors := ValidateInt(76, "min:")
+		if !errors.Is(parsingErrors, ErrParsingRule{
+			Rule: "min:",
 		}) {
 			t.Errorf("parcing error expected, %v", parsingErrors)
 		}

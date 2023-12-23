@@ -33,17 +33,24 @@ func (v ValidationErrors) Error() string {
 	builder := strings.Builder{}
 
 	for _, err := range v {
-		builder.WriteString(fmt.Sprintf("\n%s;", err.Error()))
+		builder.WriteString(fmt.Sprintf("%s", err.Error()))
 	}
 
 	return builder.String()
 }
 
 type ErrUnknownRule struct {
-	Field string
-	Tag   string
+	Tag string
 }
 
 func (e ErrUnknownRule) Error() string {
-	return fmt.Sprintf("Unknown validator tag '%s' for field '%s'", e.Tag, e.Field)
+	return fmt.Sprintf("Unknown validator tag '%s'", e.Tag)
+}
+
+type ErrParsingRule struct {
+	Rule string
+}
+
+func (e ErrParsingRule) Error() string {
+	return fmt.Sprintf("failed to parse rule '%s", e.Rule)
 }

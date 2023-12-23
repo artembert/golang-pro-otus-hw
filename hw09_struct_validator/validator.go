@@ -31,7 +31,7 @@ func Validate(v interface{}) error {
 		case reflect.String:
 		case reflect.Int:
 			val := int(valueOfStruct.Field(i).Int())
-			validationResult, parsingError := ValidateInt(field.Name, val, rule)
+			validationResult, parsingError := ValidateInt(val, rule)
 			if parsingError != nil {
 				return parsingError
 			}

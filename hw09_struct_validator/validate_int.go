@@ -6,25 +6,19 @@ import (
 	"strings"
 )
 
-func ValidateInt(filedName string, val int, rule string) (validationError []error, parsingError error) {
+func ValidateInt(val int, rule string) (validationErr []error, parsingErr error) {
 	var validationErrors []error
 	for _, r := range strings.Split(rule, "|") {
 		rulePair := strings.Split(r, ":")
 		if rulePair[0] == "" || rulePair[1] == "" {
-			return nil, ErrUnknownRule{
-				Field: filedName,
-				Tag:   rule,
-			}
+			return nil, ErrParsingRule{Rule: rule}
 		}
 
 		switch rulePair[0] {
 		case "min":
 			minInt, err := strconv.Atoi(rulePair[1])
 			if err != nil {
-				return nil, ErrUnknownRule{
-					Field: filedName,
-					Tag:   rule,
-				}
+				return nil, ErrParsingRule{Rule: rule}
 			}
 			if val < minInt {
 				validationErrors = append(validationErrors, ErrMinConstraint)
@@ -32,10 +26,7 @@ func ValidateInt(filedName string, val int, rule string) (validationError []erro
 		case "max":
 			maxInt, err := strconv.Atoi(rulePair[1])
 			if err != nil {
-				return nil, ErrUnknownRule{
-					Field: filedName,
-					Tag:   rule,
-				}
+				return nil, ErrParsingRule{Rule: rule}
 			}
 			if val > maxInt {
 				validationErrors = append(validationErrors, ErrMaxConstraint)
