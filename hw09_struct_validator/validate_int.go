@@ -21,7 +21,7 @@ func ValidateInt(val int, rule string) (validationErr []error, parsingErr error)
 				return nil, ErrParsingRule{Rule: rule}
 			}
 			if val < minInt {
-				validationErrors = append(validationErrors, ErrMinConstraint)
+				validationErrors = append(validationErrors, ErrMinConstraint{Constraint: minInt, GivenValue: val})
 			}
 		case "max":
 			maxInt, err := strconv.Atoi(rulePair[1])
@@ -29,7 +29,7 @@ func ValidateInt(val int, rule string) (validationErr []error, parsingErr error)
 				return nil, ErrParsingRule{Rule: rule}
 			}
 			if val > maxInt {
-				validationErrors = append(validationErrors, ErrMaxConstraint)
+				validationErrors = append(validationErrors, ErrMaxConstraint{Constraint: maxInt, GivenValue: val})
 			}
 		case "in":
 			availableValues := strings.Split(rulePair[1], ",")

@@ -12,8 +12,6 @@ var (
 )
 
 var (
-	ErrMinConstraint    = errors.New("value is smaller then min")
-	ErrMaxConstraint    = errors.New("value is bigger then max")
 	ErrAvailableValues  = errors.New("out of available values")
 	ErrLengthConstraint = errors.New("value is longer then allowed")
 )
@@ -52,5 +50,23 @@ type ErrParsingRule struct {
 }
 
 func (e ErrParsingRule) Error() string {
-	return fmt.Sprintf("failed to parse rule '%s", e.Rule)
+	return fmt.Sprintf("Failed to parse rule '%s", e.Rule)
+}
+
+type ErrMinConstraint struct {
+	Constraint int
+	GivenValue int
+}
+
+func (e ErrMinConstraint) Error() string {
+	return fmt.Sprintf("Given value '%v' is smaller then min: '%v'", e.GivenValue, e.Constraint)
+}
+
+type ErrMaxConstraint struct {
+	Constraint int
+	GivenValue int
+}
+
+func (e ErrMaxConstraint) Error() string {
+	return fmt.Sprintf("Given value '%v' is bigger then max: '%v'", e.GivenValue, e.Constraint)
 }

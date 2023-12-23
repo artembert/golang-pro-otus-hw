@@ -80,8 +80,8 @@ func TestValidate(t *testing.T) {
 				Length: 24,
 			},
 			expectedErr: ValidationErrors{
-				ValidationError{Field: "Width", Err: ErrMinConstraint},
-				ValidationError{Field: "Length", Err: ErrMaxConstraint},
+				ValidationError{Field: "Width", Err: ErrMinConstraint{Constraint: 7, GivenValue: 6}},
+				ValidationError{Field: "Length", Err: ErrMaxConstraint{Constraint: 23, GivenValue: 24}},
 			}.Error(),
 		},
 	}

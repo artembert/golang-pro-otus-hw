@@ -23,7 +23,10 @@ func TestValidateInt(t *testing.T) {
 				name:           "⚠️Invalid: min",
 				value:          9,
 				validationRule: "min:17",
-				expectedErrors: []error{ErrMinConstraint},
+				expectedErrors: []error{ErrMinConstraint{
+					Constraint: 17,
+					GivenValue: 9,
+				}},
 			},
 			{
 				name:           "✅Valid: max",
@@ -35,7 +38,7 @@ func TestValidateInt(t *testing.T) {
 				name:           "⚠️Invalid: max",
 				value:          14,
 				validationRule: "max:13",
-				expectedErrors: []error{ErrMaxConstraint},
+				expectedErrors: []error{ErrMaxConstraint{Constraint: 13, GivenValue: 14}},
 			},
 			{
 				name:           "✅Valid: in",
@@ -83,7 +86,7 @@ func TestValidateInt(t *testing.T) {
 				name:           "⚠️Invalid: min|in",
 				value:          9,
 				validationRule: "min:10|in:13,17",
-				expectedErrors: []error{ErrMinConstraint, ErrAvailableValues},
+				expectedErrors: []error{ErrMinConstraint{Constraint: 10, GivenValue: 9}, ErrAvailableValues},
 			},
 		}
 
