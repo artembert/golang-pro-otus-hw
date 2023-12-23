@@ -1,26 +1,23 @@
 package hw09structvalidator
 
 import (
-	"fmt"
+	"errors"
 	"reflect"
 )
 
-type ValidationError struct {
-	Field string
-	Err   error
-}
-
-type ValidationErrors []ValidationError
-
-func (v ValidationErrors) Error() string {
-	panic("implement me")
-}
-
 func Validate(v interface{}) error {
-	st := reflect.TypeOf(v)
-	for i := 0; i < st.NumField(); i++ {
-		field := st.Field(i)
+	valueOfStruct := reflect.ValueOf(v)
+	typeOfStruct := reflect.TypeOf(v)
+	var validationErrors ValidationErrors
+
+	if valueOfStruct.Kind() != reflect.Struct {
+		return ErrNotAStruct
+	}
+
+	for i := 0; i < typeOfStruct.NumField(); i++ {
+		field := typeOfStruct.Field(i)
 		rule, err := SelectValidateRule(field)
+		var fieldErrors []error
 
 		if err != nil {
 			return err
@@ -29,14 +26,30 @@ func Validate(v interface{}) error {
 			continue
 		}
 
-		valueType := reflect.ValueOf(v).Field(i).Kind()
+		valueType := valueOfStruct.Field(i).Kind()
 		switch valueType {
 		case reflect.String:
 		case reflect.Int:
+			val := int(valueOfStruct.Field(i).Int())
+			validationResult, parsingError := ValidateInt(val, rule)
+			if parsingError != nil {
+				return parsingError
+			}
+			fieldErrors = validationResult
 		case reflect.Slice:
-			fmt.Println("slice of ", reflect.ValueOf(v).Field(i).Type())
-		default:
+		}
+
+		if fieldErrors != nil {
+			validationErrors = append(validationErrors, ValidationError{
+				Field: field.Name,
+				Err:   errors.Join(fieldErrors...),
+			})
 		}
 	}
+
+	if len(validationErrors) > 0 {
+		return validationErrors
+	}
+
 	return nil
 }

@@ -2,6 +2,7 @@ package hw09structvalidator
 
 import (
 	"encoding/json"
+	"errors"
 	"testing"
 )
 
@@ -42,11 +43,21 @@ type (
 
 func TestValidate(t *testing.T) {
 	t.Run("Should return struct tag content", func(t *testing.T) {
-		user := User{}
+		user := User{Age: 18}
 		err := Validate(user)
 		if err != nil {
 			t.Errorf("Expected nil, got %v", err)
 		}
+	})
+
+	t.Run("Should return validation errors for int", func(t *testing.T) {
+		user := User{Age: 17}
+		validationErrors := Validate(user)
+		//errors.Unwrap(validationErrors)
+		if !errors.Is(validationErrors, ErrMinConstraint) {
+			t.Errorf("Expected validation error '%s', but got '%s'", ErrMinConstraint, validationErrors)
+		}
+
 	})
 }
 
