@@ -14,6 +14,9 @@ linters-settings:
         allow:
           - $gostd
           - github.com/cheggaaa/pb/v3
+          - github.com/stretchr/testify/require
+  exhaustive:
+    default-signifies-exhaustive: true
 
 issues:
   exclude-rules:
