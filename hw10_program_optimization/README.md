@@ -50,3 +50,25 @@ go test -v -count=1 -timeout=30s -tags bench .
 - Работа с сырыми байтами, нахождение позиции `"Email"` и пр. вместо ускорения анмаршалинга более поддерживаемыми и понятными средствами.
 
 #### Зачёт от 7 баллов
+
+
+## Заупск бенчмарков
+```sh
+go test -v -count=1 -timeout=30s -tags bench . > out.txt
+```
+
+```text
+=== RUN   TestGetDomainStat_Time_And_Memory
+    stats_optimization_test.go:46: time used: 337.991833ms / 300ms
+    stats_optimization_test.go:47: memory used: 308Mb / 30Mb
+--- PASS: TestGetDomainStat_Time_And_Memory (6.11s)
+PASS
+ok  	github.com/fixme_my_friend/hw10_program_optimization	6.443s
+```
+
+```sh
+go test -bench=BenchmarkGetDomainStat -cpuprofile=cpu.out -memprofile=mem.out .
+brew install graphviz
+go tool pprof -http=":8090" hw10_program_optimization.test cpu.out
+```
+
