@@ -21,16 +21,16 @@ type User struct {
 type DomainStat map[string]int
 
 func GetDomainStat(r io.Reader, domain string) (DomainStat, error) {
-	u, err := getUsers(r)
+	u, err := GetUsers(r)
 	if err != nil {
 		return nil, fmt.Errorf("get users error: %w", err)
 	}
-	return countDomains(u, domain)
+	return CountDomains(u, domain)
 }
 
-type users [100_000]User
+type Users [100_000]User
 
-func getUsers(r io.Reader) (result users, err error) {
+func GetUsers(r io.Reader) (result Users, err error) {
 	content, err := io.ReadAll(r)
 	if err != nil {
 		return
@@ -47,7 +47,7 @@ func getUsers(r io.Reader) (result users, err error) {
 	return
 }
 
-func countDomains(u users, domain string) (DomainStat, error) {
+func CountDomains(u Users, domain string) (DomainStat, error) {
 	result := make(DomainStat)
 
 	for _, user := range u {
