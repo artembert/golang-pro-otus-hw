@@ -72,3 +72,16 @@ brew install graphviz
 go tool pprof -http=":8090" hw10_program_optimization.test cpu.out
 ```
 
+```text
+goos: darwin
+goarch: arm64
+pkg: github.com/fixme_my_friend/hw10_program_optimization
+BenchmarkGetDomainStat
+BenchmarkGetDomainStat-8   	      16	  71786885 ns/op	136045282 B/op	 1700090 allocs/op
+BenchmarkGetUsers
+BenchmarkGetUsers-8        	    1880	    619661 ns/op	    6296 B/op	      66 allocs/op
+BenchmarkCountDomains
+BenchmarkCountDomains-8    	      14	  73049366 ns/op	136039284 B/op	 1700029 allocs/op
+PASS
+ok  	github.com/fixme_my_friend/hw10_program_optimization	5.244s
+```
