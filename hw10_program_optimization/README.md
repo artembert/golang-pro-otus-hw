@@ -52,7 +52,7 @@ go test -v -count=1 -timeout=30s -tags bench .
 #### Зачёт от 7 баллов
 
 
-## Заупск бенчмарков
+## Заупуск бенчмарков
 ```sh
 go test -v -count=1 -timeout=30s -tags bench . > out.txt
 ```
@@ -84,4 +84,9 @@ BenchmarkCountDomains
 BenchmarkCountDomains-8    	      14	  73049366 ns/op	136039284 B/op	 1700029 allocs/op
 PASS
 ok  	github.com/fixme_my_friend/hw10_program_optimization	5.244s
+```
+
+### Сравнение результатов
+```sh
+~/go/bin/benchstat benchmark-results/0.original.txt benchmark-results/1.no-regexp.txt
 ```
