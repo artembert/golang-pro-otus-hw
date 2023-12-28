@@ -2,17 +2,19 @@ package hw10programoptimization
 
 import (
 	"bufio"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"strings"
+
+	"github.com/mailru/easyjson"
 )
 
 var (
 	ErrUserParsing = errors.New("user parsing failed")
 )
 
+//easyjson:json -all
 type User struct {
 	ID       int
 	Name     string
@@ -36,7 +38,7 @@ func GetDomainStat(r io.Reader, domain string) (DomainStat, error) {
 	user := &User{}
 
 	for fileScanner.Scan() {
-		err := json.Unmarshal(fileScanner.Bytes(), user)
+		err := easyjson.Unmarshal(fileScanner.Bytes(), user)
 		if err != nil {
 			return nil, fmt.Errorf("%w, %v", ErrUserParsing, err)
 		}
