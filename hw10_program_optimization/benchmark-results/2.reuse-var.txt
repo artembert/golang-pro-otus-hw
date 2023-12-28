@@ -1,0 +1,19 @@
+=== RUN   TestGetDomainStat
+=== RUN   TestGetDomainStat/find_'com'
+=== RUN   TestGetDomainStat/find_'gov'
+=== RUN   TestGetDomainStat/find_'unknown'
+--- PASS: TestGetDomainStat (0.02s)
+    --- PASS: TestGetDomainStat/find_'com' (0.01s)
+    --- PASS: TestGetDomainStat/find_'gov' (0.00s)
+    --- PASS: TestGetDomainStat/find_'unknown' (0.00s)
+goos: darwin
+goarch: arm64
+pkg: github.com/fixme_my_friend/hw10_program_optimization
+BenchmarkGetDomainStat
+BenchmarkGetDomainStat-8   	     439	   2602727 ns/op	    6696 B/op	      74 allocs/op
+BenchmarkGetUsers
+BenchmarkGetUsers-8        	    1938	    627814 ns/op	    6296 B/op	      66 allocs/op
+BenchmarkCountDomains
+BenchmarkCountDomains-8    	     568	   2038231 ns/op	     411 B/op	       8 allocs/op
+PASS
+ok  	github.com/fixme_my_friend/hw10_program_optimization	4.372s
