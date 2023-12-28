@@ -48,9 +48,10 @@ func GetUsers(r io.Reader) (result Users, err error) {
 
 func CountDomains(u Users, domain string) (DomainStat, error) {
 	result := make(DomainStat)
+	query := "." + domain
 
 	for _, user := range u {
-		matched := strings.Contains(user.Email, "."+domain)
+		matched := strings.Contains(user.Email, query)
 		if matched {
 			key := strings.ToLower(strings.SplitN(user.Email, "@", 2)[1])
 			result[key]++
