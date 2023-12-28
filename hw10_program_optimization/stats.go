@@ -44,7 +44,7 @@ func GetUsers(r io.Reader) (result Users, err error) {
 		}
 		result[i] = *user
 	}
-	return
+	return result, nil
 }
 
 func CountDomains(u Users, domain string) (DomainStat, error) {
