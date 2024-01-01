@@ -35,7 +35,7 @@ func GetDomainStat(r io.Reader, domain string) (DomainStat, error) {
 
 	for {
 		err := decoder.Decode(user)
-		if err == io.EOF {
+		if errors.Is(io.EOF, err) {
 			break
 		}
 		if err != nil {
