@@ -21,8 +21,6 @@ type User struct {
 	Address  string
 }
 
-type Users [100_000]User
-
 type DomainStat map[string]int
 
 func GetDomainStat(r io.Reader, domain string) (DomainStat, error) {
