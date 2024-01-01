@@ -9,9 +9,7 @@ import (
 	"strings"
 )
 
-var (
-	ErrUserParsing = errors.New("user parsing failed")
-)
+var ErrUserParsing = errors.New("user parsing failed")
 
 type User struct {
 	ID       int
