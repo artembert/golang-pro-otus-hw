@@ -27,12 +27,17 @@ func GetDomainStat(r io.Reader, domain string) (DomainStat, error) {
 	result := make(DomainStat)
 
 	fileScanner := bufio.NewScanner(r)
+	reader := bufio.NewReader(r)
+	decoder := json.NewDecoder(reader)
 	fileScanner.Split(bufio.ScanLines)
 	query := "." + domain
 	user := &User{}
 
-	for fileScanner.Scan() {
-		err := json.Unmarshal(fileScanner.Bytes(), user)
+	for {
+		err := decoder.Decode(user)
+		if err == io.EOF {
+			break
+		}
 		if err != nil {
 			return nil, fmt.Errorf("%w, %w", ErrUserParsing, err)
 		}
