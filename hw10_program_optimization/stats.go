@@ -38,12 +38,22 @@ func GetDomainStat(r io.Reader, domain string) (DomainStat, error) {
 		if err != nil {
 			return nil, fmt.Errorf("%w, %w", ErrUserParsing, err)
 		}
-		matched := strings.Contains(user.Email, query)
+		matched := strings.HasSuffix(user.Email, query)
 		if matched {
-			key := strings.ToLower(strings.SplitN(user.Email, "@", 2)[1])
-			result[key]++
+			key, err := extractDomain(user.Email)
+			if err == nil {
+				result[key]++
+			}
 		}
 	}
 
 	return result, nil
+}
+
+func extractDomain(email string) (string, error) {
+	atIndex := strings.IndexRune(email, '@')
+	if atIndex < 0 {
+		return "", fmt.Errorf("unsupported email format: '@' was not found in %s", email)
+	}
+	return strings.ToLower(email[atIndex+1:]), nil
 }
