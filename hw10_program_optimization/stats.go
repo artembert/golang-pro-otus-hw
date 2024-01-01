@@ -36,7 +36,7 @@ func GetDomainStat(r io.Reader, domain string) (DomainStat, error) {
 	for fileScanner.Scan() {
 		err := json.Unmarshal(fileScanner.Bytes(), user)
 		if err != nil {
-			return nil, fmt.Errorf("%w, %v", ErrUserParsing, err)
+			return nil, fmt.Errorf("%w, %w", ErrUserParsing, err)
 		}
 		matched := strings.Contains(user.Email, query)
 		if matched {
