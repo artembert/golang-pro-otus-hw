@@ -4,9 +4,10 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/mailru/easyjson"
 	"io"
 	"strings"
+
+	"github.com/mailru/easyjson"
 )
 
 var ErrUserParsing = errors.New("user parsing failed")
