@@ -50,3 +50,43 @@ go test -v -count=1 -timeout=30s -tags bench .
 - Работа с сырыми байтами, нахождение позиции `"Email"` и пр. вместо ускорения анмаршалинга более поддерживаемыми и понятными средствами.
 
 #### Зачёт от 7 баллов
+
+
+## Заупуск бенчмарков
+```sh
+go test -v -count=1 -timeout=30s -tags bench . > out.txt
+```
+
+```text
+=== RUN   TestGetDomainStat_Time_And_Memory
+    stats_optimization_test.go:46: time used: 337.991833ms / 300ms
+    stats_optimization_test.go:47: memory used: 308Mb / 30Mb
+--- PASS: TestGetDomainStat_Time_And_Memory (6.11s)
+PASS
+ok  	github.com/fixme_my_friend/hw10_program_optimization	6.443s
+```
+
+```sh
+go test -bench=BenchmarkGetDomainStat -cpuprofile=cpu.out -memprofile=mem.out .
+brew install graphviz
+go tool pprof -http=":8090" hw10_program_optimization.test cpu.out
+```
+
+```text
+goos: darwin
+goarch: arm64
+pkg: github.com/fixme_my_friend/hw10_program_optimization
+BenchmarkGetDomainStat
+BenchmarkGetDomainStat-8   	      16	  71786885 ns/op	136045282 B/op	 1700090 allocs/op
+BenchmarkGetUsers
+BenchmarkGetUsers-8        	    1880	    619661 ns/op	    6296 B/op	      66 allocs/op
+BenchmarkCountDomains
+BenchmarkCountDomains-8    	      14	  73049366 ns/op	136039284 B/op	 1700029 allocs/op
+PASS
+ok  	github.com/fixme_my_friend/hw10_program_optimization	5.244s
+```
+
+### Сравнение результатов
+```sh
+~/go/bin/benchstat benchmark-results/0.original.txt benchmark-results/1.no-regexp.txt
+```

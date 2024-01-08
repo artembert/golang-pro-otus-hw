@@ -15,6 +15,7 @@ linters-settings:
           - $gostd
           - github.com/cheggaaa/pb/v3
           - github.com/stretchr/testify/require
+          - github.com/mailru/easyjson
   exhaustive:
     default-signifies-exhaustive: true
 

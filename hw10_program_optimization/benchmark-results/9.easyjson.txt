@@ -1,0 +1,15 @@
+=== RUN   TestGetDomainStat
+=== RUN   TestGetDomainStat/find_'com'
+=== RUN   TestGetDomainStat/find_'gov'
+=== RUN   TestGetDomainStat/find_'unknown'
+--- PASS: TestGetDomainStat (0.00s)
+    --- PASS: TestGetDomainStat/find_'com' (0.00s)
+    --- PASS: TestGetDomainStat/find_'gov' (0.00s)
+    --- PASS: TestGetDomainStat/find_'unknown' (0.00s)
+goos: darwin
+goarch: arm64
+pkg: github.com/artembert/golang-pro-otus-hw/hw10_program_optimization
+BenchmarkGetDomainStat
+BenchmarkGetDomainStat-8   	  484744	      2467 ns/op	    5832 B/op	      38 allocs/op
+PASS
+ok  	github.com/artembert/golang-pro-otus-hw/hw10_program_optimization	2.277s
