@@ -7,9 +7,7 @@ import (
 	"time"
 )
 
-var (
-	ErrNoEstablishedConnection = errors.New("no established connection")
-)
+var ErrNoEstablishedConnection = errors.New("no established connection")
 
 type TelnetClient interface {
 	Connect() error

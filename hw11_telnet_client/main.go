@@ -14,9 +14,7 @@ import (
 
 const TIMEOUT = 10 * time.Second
 
-var (
-	ErrWrongArgs = errors.New("hostname and port required")
-)
+var ErrWrongArgs = errors.New("hostname and port required")
 
 func main() {
 	if err := run(); err != nil {
