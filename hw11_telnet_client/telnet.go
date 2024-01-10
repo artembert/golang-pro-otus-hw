@@ -8,11 +8,7 @@ import (
 )
 
 var (
-	ErrConnection              = errors.New("connection error")
 	ErrNoEstablishedConnection = errors.New("no established connection")
-	ErrCloseConnections        = errors.New("failed to close connection")
-	ErrSend                    = errors.New("failed to send message")
-	ErrReceive                 = errors.New("failed to receive message")
 )
 
 type TelnetClient interface {
@@ -43,7 +39,7 @@ func NewTelnetClient(address string, timeout time.Duration, in io.ReadCloser, ou
 func (tc *telnetClient) Connect() error {
 	connection, err := net.DialTimeout("tcp", tc.address, tc.timeout)
 	if err != nil {
-		return errors.Join(err, ErrConnection)
+		return err
 	}
 	tc.connection = connection
 	return nil
@@ -53,25 +49,19 @@ func (tc *telnetClient) Close() error {
 	if tc.connection == nil {
 		return ErrNoEstablishedConnection
 	}
-	if err := tc.connection.Close(); err != nil {
-		return errors.Join(err, ErrCloseConnections)
-	}
-	return nil
+	err := tc.connection.Close()
+	return err
 }
 
 func (tc *telnetClient) Send() error {
 	if tc.connection == nil {
 		return ErrNoEstablishedConnection
 	}
-	if _, err := io.Copy(tc.connection, tc.in); err != nil {
-		return errors.Join(err, ErrSend)
-	}
-	return nil
+	_, err := io.Copy(tc.connection, tc.in)
+	return err
 }
 
 func (tc *telnetClient) Receive() error {
-	if _, err := io.Copy(tc.out, tc.connection); err != nil {
-		return errors.Join(err, ErrReceive)
-	}
-	return nil
+	_, err := io.Copy(tc.out, tc.connection)
+	return err
 }
