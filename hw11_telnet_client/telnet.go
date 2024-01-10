@@ -45,9 +45,7 @@ func (tc *telnetClient) Connect() error {
 	if err != nil {
 		return errors.Join(err, ErrConnection)
 	}
-
 	tc.connection = connection
-
 	return nil
 }
 
@@ -55,12 +53,9 @@ func (tc *telnetClient) Close() error {
 	if tc.connection == nil {
 		return ErrNoEstablishedConnection
 	}
-
-	err := tc.connection.Close()
-	if err != nil {
+	if err := tc.connection.Close(); err != nil {
 		return errors.Join(err, ErrCloseConnections)
 	}
-
 	return nil
 }
 
@@ -68,20 +63,15 @@ func (tc *telnetClient) Send() error {
 	if tc.connection == nil {
 		return ErrNoEstablishedConnection
 	}
-
-	_, err := io.Copy(tc.connection, tc.in)
-	if err != nil {
+	if _, err := io.Copy(tc.connection, tc.in); err != nil {
 		return errors.Join(err, ErrSend)
 	}
-
 	return nil
 }
 
 func (tc *telnetClient) Receive() error {
-	_, err := io.Copy(tc.out, tc.connection)
-	if err != nil {
+	if _, err := io.Copy(tc.out, tc.connection); err != nil {
 		return errors.Join(err, ErrReceive)
 	}
-
 	return nil
 }
