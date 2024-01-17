@@ -57,10 +57,14 @@ func (s *Storage) UpdateEvent(evt storage.Event) error {
 	return nil
 }
 
-func (s *Storage) GetEventByID(id string) error {
-	return nil
+func (s *Storage) GetEventByID(id string) (storage.Event, error) {
+	return storage.Event{}, nil
 }
 
 func (s *Storage) GetAllEvents() ([]storage.Event, error) {
 	return make([]storage.Event, 0), nil
 }
+
+// Compile-time check that Storage implements storage.EventStorage
+var _ storage.EventStorage = &Storage{}
+var _ storage.EventStorage = (*Storage)(nil)

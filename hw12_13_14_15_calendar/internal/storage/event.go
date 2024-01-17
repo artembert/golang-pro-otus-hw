@@ -1,6 +1,9 @@
 package storage
 
-import "time"
+import (
+	"errors"
+	"time"
+)
 
 type Event struct {
 	ID           string
@@ -16,8 +19,13 @@ type EventStorage interface {
 	CreateEvent(evt Event) error
 	DeleteEvent(evt Event) error
 	UpdateEvent(evt Event) error
-	GetEventByID(id string) error
+	GetEventByID(id string) (Event, error)
 	GetAllEvents() ([]Event, error)
 }
 
 type UserId string
+
+var (
+	ErrEventNotFound     = errors.New("event by id '%s' not found")
+	ErrEventAlreadyExist = errors.New("event by id '%s' already exist")
+)
