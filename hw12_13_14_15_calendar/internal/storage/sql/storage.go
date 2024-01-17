@@ -2,6 +2,7 @@ package sqlstorage
 
 import (
 	"context"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
@@ -25,21 +26,41 @@ func New(conn *pgxpool.Pool, cfg Config, log Logger) *Storage {
 	return &Storage{conn, log, cfg}
 }
 
-func (storage *Storage) Connect(ctx context.Context) error {
+func (s *Storage) Connect(ctx context.Context) error {
 	pool, err := pgxpool.Connect(
 		ctx,
-		storage.cfg.GetDatabaseConnectionString(),
+		s.cfg.GetDatabaseConnectionString(),
 	)
 	if err != nil {
 		return err
 	}
-	storage.conn = pool
+	s.conn = pool
 
 	return nil
 }
 
-func (storage *Storage) Close(ctx context.Context) error {
-	storage.conn.Close()
+func (s *Storage) Close(ctx context.Context) error {
+	s.conn.Close()
 
 	return nil
+}
+
+func (s *Storage) CreateEvent(evt storage.Event) error {
+	return nil
+}
+
+func (s *Storage) DeleteEvent(evt storage.Event) error {
+	return nil
+}
+
+func (s *Storage) UpdateEvent(evt storage.Event) error {
+	return nil
+}
+
+func (s *Storage) GetEventByID(id string) error {
+	return nil
+}
+
+func (s *Storage) GetAllEvents() ([]storage.Event, error) {
+	return make([]storage.Event, 0), nil
 }

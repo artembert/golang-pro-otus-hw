@@ -12,4 +12,12 @@ type Event struct {
 	NotifyBefore *time.Duration
 }
 
+type EventStorage interface {
+	CreateEvent(evt Event) error
+	DeleteEvent(evt Event) error
+	UpdateEvent(evt Event) error
+	GetEventByID(id string) error
+	GetAllEvents() ([]Event, error)
+}
+
 type UserId string
