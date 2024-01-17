@@ -1,20 +1,45 @@
 package sqlstorage
 
-import "context"
+import (
+	"context"
+	"github.com/jackc/pgx/v4/pgxpool"
+)
 
-type Storage struct { // TODO
+type Config interface {
+	DriverName() string
+	GetDatabaseConnectionString() string
+	MigrationDir() string
 }
 
-func New() *Storage {
-	return &Storage{}
+type Logger interface {
+	Error(msg string)
 }
 
-func (s *Storage) Connect(ctx context.Context) error {
-	// TODO
+type Storage struct {
+	conn *pgxpool.Pool
+	log  Logger
+	cfg  Config
+}
+
+func New(conn *pgxpool.Pool, cfg Config, log Logger) *Storage {
+	return &Storage{conn, log, cfg}
+}
+
+func (storage *Storage) Connect(ctx context.Context) error {
+	pool, err := pgxpool.Connect(
+		ctx,
+		storage.cfg.GetDatabaseConnectionString(),
+	)
+	if err != nil {
+		return err
+	}
+	storage.conn = pool
+
 	return nil
 }
 
-func (s *Storage) Close(ctx context.Context) error {
-	// TODO
+func (storage *Storage) Close(ctx context.Context) error {
+	storage.conn.Close()
+
 	return nil
 }
