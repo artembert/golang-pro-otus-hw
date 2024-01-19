@@ -2,7 +2,7 @@ package sqlstorage
 
 import (
 	"context"
-	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/domain/event"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
@@ -45,26 +45,26 @@ func (s *Storage) Close(ctx context.Context) error {
 	return nil
 }
 
-func (s *Storage) CreateEvent(evt storage.Event) error {
+func (s *Storage) CreateEvent(evt event.Event) error {
 	return nil
 }
 
-func (s *Storage) DeleteEvent(evt storage.Event) error {
+func (s *Storage) DeleteEvent(evt event.Event) error {
 	return nil
 }
 
-func (s *Storage) UpdateEvent(evt storage.Event) error {
+func (s *Storage) UpdateEvent(evt event.Event) error {
 	return nil
 }
 
-func (s *Storage) GetEventByID(id string) (storage.Event, error) {
-	return storage.Event{}, nil
+func (s *Storage) GetEventByID(id string) (event.Event, error) {
+	return event.Event{}, nil
 }
 
-func (s *Storage) GetAllEvents() ([]storage.Event, error) {
-	return make([]storage.Event, 0), nil
+func (s *Storage) GetAllEvents() ([]event.Event, error) {
+	return make([]event.Event, 0), nil
 }
 
-// Compile-time check that Storage implements storage.EventStorage
-var _ storage.EventStorage = &Storage{}
-var _ storage.EventStorage = (*Storage)(nil)
+// Compile-time check that Storage implements storage.Storage
+var _ event.Storage = &Storage{}
+var _ event.Storage = (*Storage)(nil)

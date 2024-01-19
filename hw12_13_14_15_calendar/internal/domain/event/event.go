@@ -1,4 +1,4 @@
-package storage
+package event
 
 import (
 	"errors"
@@ -15,7 +15,7 @@ type Event struct {
 	NotifyBefore *time.Duration
 }
 
-type EventStorage interface {
+type Storage interface {
 	CreateEvent(evt Event) error
 	DeleteEvent(evt Event) error
 	UpdateEvent(evt Event) error

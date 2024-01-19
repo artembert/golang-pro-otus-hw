@@ -1,11 +1,11 @@
 package memorystorage
 
 import (
-	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/domain/event"
 	"sync"
 )
 
-type eventsCollection map[string]storage.Event
+type eventsCollection map[string]event.Event
 
 type Logger interface {
 	Error(msg string)
@@ -24,7 +24,7 @@ func New(log Logger) *Storage {
 	}
 }
 
-func (s *Storage) CreateEvent(evt storage.Event) error {
+func (s *Storage) CreateEvent(evt event.Event) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -33,7 +33,7 @@ func (s *Storage) CreateEvent(evt storage.Event) error {
 	return nil
 }
 
-func (s *Storage) DeleteEvent(evt storage.Event) error {
+func (s *Storage) DeleteEvent(evt event.Event) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -42,7 +42,7 @@ func (s *Storage) DeleteEvent(evt storage.Event) error {
 	return nil
 }
 
-func (s *Storage) UpdateEvent(evt storage.Event) error {
+func (s *Storage) UpdateEvent(evt event.Event) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -51,17 +51,17 @@ func (s *Storage) UpdateEvent(evt storage.Event) error {
 	return nil
 }
 
-func (s *Storage) GetEventByID(id string) (storage.Event, error) {
+func (s *Storage) GetEventByID(id string) (event.Event, error) {
 	evt, ok := s.events[id]
 	if !ok {
-		return storage.Event{}, storage.ErrEventNotFound
+		return event.Event{}, event.ErrEventNotFound
 	}
 
 	return evt, nil
 }
 
-func (s *Storage) GetAllEvents() ([]storage.Event, error) {
-	events := make([]storage.Event, 0)
+func (s *Storage) GetAllEvents() ([]event.Event, error) {
+	events := make([]event.Event, 0)
 
 	for _, evt := range s.events {
 		events = append(events, evt)
@@ -70,6 +70,6 @@ func (s *Storage) GetAllEvents() ([]storage.Event, error) {
 	return events, nil
 }
 
-// Compile-time check that Storage implements storage.EventStorage
-var _ storage.EventStorage = &Storage{}
-var _ storage.EventStorage = (*Storage)(nil)
+// Compile-time check that Storage implements storage.Storage
+var _ event.Storage = &Storage{}
+var _ event.Storage = (*Storage)(nil)
