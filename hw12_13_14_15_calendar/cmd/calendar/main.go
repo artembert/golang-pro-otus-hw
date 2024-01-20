@@ -4,7 +4,7 @@ import (
 	"context"
 	"flag"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/config"
-	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage/fabric"
 	"log"
 	"os/signal"
 	"syscall"
@@ -35,7 +35,7 @@ func main() {
 
 	//logg := logger.New(cfg.Logger.Level)
 
-	store, err := storage.Init(ctx, &cfg)
+	store, err := fabric.Init(ctx, &cfg)
 	if err != nil {
 		log.Fatalf("failed to connect to srorage %s, %s", cfg.Storage.Type, err)
 	}

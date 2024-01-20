@@ -2,7 +2,7 @@ package memorystorage
 
 import (
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/domain/event"
-	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/domain/storage"
 	"sync"
 )
 
@@ -71,5 +71,5 @@ func (s *Storage) GetAllEvents() ([]event.Event, error) {
 }
 
 // Compile-time check that Storage implements storage.Storage
-var _ storage.Storage = &Storage{}
-var _ storage.Storage = (*Storage)(nil)
+var _ storage.Actions = &Storage{}
+var _ storage.Actions = (*Storage)(nil)
