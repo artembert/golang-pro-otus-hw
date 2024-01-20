@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/config"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/logger_uber"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage/fabric"
 	"log"
 	"os/signal"
@@ -33,7 +34,12 @@ func main() {
 		log.Fatalf("failed to parse config %s: %s", configFile, err)
 	}
 
-	//logg := logger.New(cfg.Logger.Level)
+	//logFile, err := logger.GetOutputFile(cfg.Logger.OutputPath)
+	//if err != nil {
+	//	log.Fatalf("failed to resolve log output %s: %s", cfg.Logger.OutputPath, err)
+	//}
+	//logg, err := logger.New(cfg.Logger.Level, logFile)
+	logg, err := logger_uber.New(cfg.Logger.Level, cfg.Logger.OutputPath)
 
 	store, err := fabric.Init(ctx, &cfg)
 	if err != nil {

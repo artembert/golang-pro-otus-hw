@@ -2,14 +2,15 @@ package config
 
 import (
 	"fmt"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/domain/loglevel"
 	"gopkg.in/yaml.v3"
 	"log"
 	"os"
 )
 
 type LoggerConf struct {
-	Level      string `yaml:"level"`
-	OutputPath string `yaml:"outputPath"`
+	Level      loglevel.LogLevel `yaml:"level"`
+	OutputPath string            `yaml:"outputPath"`
 }
 
 type StorageConf struct {
