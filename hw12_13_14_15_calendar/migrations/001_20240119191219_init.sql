@@ -8,7 +8,7 @@ CREATE table events
     duration interval NOT NULL,
     description text,
     user_id     UUID                                       NOT NULL,
-    remind_for  TIMESTAMP
+    remind_for  interval
 );
 
 -- +goose StatementEnd
