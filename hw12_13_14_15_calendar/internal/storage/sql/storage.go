@@ -7,25 +7,24 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
-type Config interface {
-	DriverName() string
-	GetDatabaseConnectionString() string
-	MigrationDir() string
+type config interface {
+	BuildDBUrl() string
 }
 
 type Storage struct {
+	ctx  context.Context
+	cfg  config
 	conn *pgxpool.Pool
-	cfg  Config
 }
 
-func New(conn *pgxpool.Pool, cfg Config) *Storage {
-	return &Storage{conn, cfg}
+func New(ctx context.Context, cfg config) *Storage {
+	return &Storage{ctx: ctx, cfg: cfg}
 }
 
 func (s *Storage) Connect(ctx context.Context) error {
 	pool, err := pgxpool.Connect(
 		ctx,
-		s.cfg.GetDatabaseConnectionString(),
+		s.cfg.BuildDBUrl(),
 	)
 	if err != nil {
 		return err

@@ -1,0 +1,15 @@
+logger:
+  level: "info"
+  outputPath: "./log/app.log"
+storage:
+  type: "sql"
+db:
+  host: "127.0.0.1"
+  port: "5432"
+  dbName: "calendar"
+  user: "calendar_admin"
+  password: "calendar_admin"
+  migrationDir: "/migrations"
+server:
+  host: "127.0.0.1"
+  port: "8080"

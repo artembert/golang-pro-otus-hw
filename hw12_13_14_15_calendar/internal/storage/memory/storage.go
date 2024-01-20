@@ -15,13 +15,12 @@ type Logger interface {
 type Storage struct {
 	mu     sync.RWMutex
 	events eventsCollection
-	log    Logger
+	log    *Logger
 }
 
-func New(log Logger) *Storage {
+func New() *Storage {
 	return &Storage{
 		events: make(eventsCollection),
-		log:    log,
 	}
 }
 
