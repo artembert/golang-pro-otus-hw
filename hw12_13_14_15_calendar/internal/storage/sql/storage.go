@@ -3,6 +3,7 @@ package sqlstorage
 import (
 	"context"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/domain/event"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
@@ -66,5 +67,5 @@ func (s *Storage) GetAllEvents() ([]event.Event, error) {
 }
 
 // Compile-time check that Storage implements storage.Storage
-var _ event.Storage = &Storage{}
-var _ event.Storage = (*Storage)(nil)
+var _ storage.Storage = &Storage{}
+var _ storage.Storage = (*Storage)(nil)

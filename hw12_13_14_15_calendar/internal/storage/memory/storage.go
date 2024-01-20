@@ -2,6 +2,7 @@ package memorystorage
 
 import (
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/domain/event"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage"
 	"sync"
 )
 
@@ -54,7 +55,7 @@ func (s *Storage) UpdateEvent(evt event.Event) error {
 func (s *Storage) GetEventByID(id string) (event.Event, error) {
 	evt, ok := s.events[id]
 	if !ok {
-		return event.Event{}, event.ErrEventNotFound
+		return event.Event{}, storage.ErrEventNotFound
 	}
 
 	return evt, nil
@@ -71,5 +72,5 @@ func (s *Storage) GetAllEvents() ([]event.Event, error) {
 }
 
 // Compile-time check that Storage implements storage.Storage
-var _ event.Storage = &Storage{}
-var _ event.Storage = (*Storage)(nil)
+var _ storage.Storage = &Storage{}
+var _ storage.Storage = (*Storage)(nil)
