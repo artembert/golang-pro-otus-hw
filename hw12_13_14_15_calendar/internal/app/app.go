@@ -2,15 +2,20 @@ package app
 
 import (
 	"context"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/domain/storage"
 )
 
-type App struct { // TODO
+type App struct {
+	ctx    context.Context
+	store  Storage
+	logger Logger
 }
 
 type Logger interface { // TODO
 }
 
-type Storage interface { // TODO
+type Storage interface {
+	storage.Actions
 }
 
 func New(logger Logger, storage Storage) *App {
