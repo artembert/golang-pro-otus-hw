@@ -2,8 +2,8 @@ package app
 
 import (
 	"context"
-	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/domain/logger"
-	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/domain/storage"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/logger"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/storage"
 )
 
 type App struct {

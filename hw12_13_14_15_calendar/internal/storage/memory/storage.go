@@ -2,7 +2,7 @@ package memorystorage
 
 import (
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/domain"
-	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/domain/storage"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/storage"
 	"sync"
 )
 

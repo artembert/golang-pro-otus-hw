@@ -2,7 +2,7 @@ package config
 
 import (
 	"fmt"
-	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/domain/loglevel"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/loglevel"
 	"gopkg.in/yaml.v3"
 	"log"
 	"os"

@@ -2,7 +2,7 @@ package logger
 
 import (
 	"fmt"
-	abstractlogger "github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/domain/logger"
+	abstractlogger "github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/logger"
 	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
