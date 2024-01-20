@@ -45,7 +45,7 @@ func main() {
 	}
 
 	calendar := app.New(ctx, logg, store)
-	_ = calendar
+
 	server := internalhttp.New(logg, calendar, internalhttp.Config(cfg.Server))
 
 	go func() {
