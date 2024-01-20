@@ -13,18 +13,13 @@ type Config interface {
 	MigrationDir() string
 }
 
-type Logger interface {
-	Error(msg string)
-}
-
 type Storage struct {
 	conn *pgxpool.Pool
-	log  Logger
 	cfg  Config
 }
 
-func New(conn *pgxpool.Pool, cfg Config, log Logger) *Storage {
-	return &Storage{conn, log, cfg}
+func New(conn *pgxpool.Pool, cfg Config) *Storage {
+	return &Storage{conn, cfg}
 }
 
 func (s *Storage) Connect(ctx context.Context) error {
