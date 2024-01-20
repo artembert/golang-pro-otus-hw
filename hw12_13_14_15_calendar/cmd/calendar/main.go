@@ -6,8 +6,10 @@ import (
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/app"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/config"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/pkg/loggerzap"
+	internalhttp "github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/server/http"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage/fabric"
 	"log"
+	"os"
 	"os/signal"
 	"syscall"
 )
@@ -49,24 +51,21 @@ func main() {
 
 	calendar := app.New(ctx, logg, store)
 	_ = calendar
-	//server := internalhttp.NewServer(logg, calendar)
+	server := internalhttp.New(logg, calendar, internalhttp.Config(cfg.Server))
 
-	//go func() {
-	//	<-ctx.Done()
-	//
-	//	timeoutCtx, cancel := context.WithTimeout(context.Background(), time.Second*3)
-	//	defer cancel()
-	//
-	//	if err := server.Stop(ctx); err != nil {
-	//		logg.Error("failed to stop http server: " + err.Error())
-	//	}
-	//}()
+	go func() {
+		<-ctx.Done()
 
-	//logg.Info("calendar is running...")
+		if err := server.Stop(ctx); err != nil {
+			logg.Error("failed to stop http server: " + err.Error())
+		}
+	}()
 
-	//if err := server.Start(ctx); err != nil {
-	//logg.Error("failed to start http server: " + err.Error())
-	//cancel()
-	//os.Exit(1) //nolint:gocritic
-	//}
+	logg.Info("calendar is running...")
+
+	if err := server.Start(ctx); err != nil {
+		logg.Error("failed to start http server: " + err.Error())
+		cancel()
+		os.Exit(1) //nolint:gocritic
+	}
 }

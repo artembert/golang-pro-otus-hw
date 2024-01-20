@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/jackc/pgx/v4 v4.18.1
+	github.com/pkg/errors v0.8.1
 	github.com/sirupsen/logrus v1.4.2
 	go.uber.org/zap v1.26.0
 	gopkg.in/yaml.v3 v3.0.1

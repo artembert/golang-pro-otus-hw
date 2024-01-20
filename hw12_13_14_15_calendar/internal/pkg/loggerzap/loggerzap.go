@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/loglevel"
 	"go.uber.org/zap"
+	"net/http"
 )
 
 type Logger struct {
@@ -51,4 +52,8 @@ func (logger Logger) Debug(data ...interface{}) {
 
 func (logger Logger) Warn(data ...interface{}) {
 	logger.zap.Warn(data)
+}
+
+func (logger Logger) HttpRequest(r *http.Request, data ...interface{}) {
+	logger.zap.With("IP", r.RemoteAddr).Info(data)
 }
