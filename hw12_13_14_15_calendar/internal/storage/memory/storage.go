@@ -1,12 +1,12 @@
 package memorystorage
 
 import (
-	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/domain/event"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/domain"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/domain/storage"
 	"sync"
 )
 
-type eventsCollection map[string]event.Event
+type eventsCollection map[string]domain.Event
 
 type Logger interface {
 	Error(msg string)
@@ -24,7 +24,7 @@ func New() *Storage {
 	}
 }
 
-func (s *Storage) CreateEvent(evt event.Event) error {
+func (s *Storage) CreateEvent(evt domain.Event) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -33,7 +33,7 @@ func (s *Storage) CreateEvent(evt event.Event) error {
 	return nil
 }
 
-func (s *Storage) DeleteEvent(evt event.Event) error {
+func (s *Storage) DeleteEvent(evt domain.Event) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -42,7 +42,7 @@ func (s *Storage) DeleteEvent(evt event.Event) error {
 	return nil
 }
 
-func (s *Storage) UpdateEvent(evt event.Event) error {
+func (s *Storage) UpdateEvent(evt domain.Event) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -51,17 +51,17 @@ func (s *Storage) UpdateEvent(evt event.Event) error {
 	return nil
 }
 
-func (s *Storage) GetEventByID(id string) (event.Event, error) {
+func (s *Storage) GetEventByID(id string) (domain.Event, error) {
 	evt, ok := s.events[id]
 	if !ok {
-		return event.Event{}, storage.ErrEventNotFound
+		return domain.Event{}, storage.ErrEventNotFound
 	}
 
 	return evt, nil
 }
 
-func (s *Storage) GetAllEvents() ([]event.Event, error) {
-	events := make([]event.Event, 0)
+func (s *Storage) GetAllEvents() ([]domain.Event, error) {
+	events := make([]domain.Event, 0)
 
 	for _, evt := range s.events {
 		events = append(events, evt)

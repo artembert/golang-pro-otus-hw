@@ -2,7 +2,7 @@ package storage
 
 import (
 	"errors"
-	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/domain/event"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/domain"
 )
 
 type Type string
@@ -13,11 +13,11 @@ const (
 )
 
 type Actions interface {
-	CreateEvent(evt event.Event) error
-	DeleteEvent(evt event.Event) error
-	UpdateEvent(evt event.Event) error
-	GetEventByID(id string) (event.Event, error)
-	GetAllEvents() ([]event.Event, error)
+	CreateEvent(evt domain.Event) error
+	DeleteEvent(evt domain.Event) error
+	UpdateEvent(evt domain.Event) error
+	GetEventByID(id string) (domain.Event, error)
+	GetAllEvents() ([]domain.Event, error)
 }
 
 var (
