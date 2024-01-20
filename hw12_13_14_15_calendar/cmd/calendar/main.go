@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/app"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/config"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/logger_uber"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage/fabric"
@@ -45,9 +46,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to connect to srorage %s, %s", cfg.Storage.Type, err)
 	}
-	_ = store
-	//calendar := app.New(logg, storage)
 
+	calendar := app.New(ctx, logg, store)
+	_ = calendar
 	//server := internalhttp.NewServer(logg, calendar)
 
 	//go func() {

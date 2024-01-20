@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/domain/logger"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/domain/storage"
 )
 
@@ -11,15 +12,19 @@ type App struct {
 	logger Logger
 }
 
-type Logger interface { // TODO
+type Logger interface {
+	logger.Logger
 }
 
 type Storage interface {
 	storage.Actions
 }
 
-func New(logger Logger, storage Storage) *App {
-	return &App{}
+func New(ctx context.Context, logger Logger, storage Storage) *App {
+	logger.Info("app created")
+	return &App{
+		ctx, storage, logger,
+	}
 }
 
 func (a *App) CreateEvent(ctx context.Context, id, title string) error {

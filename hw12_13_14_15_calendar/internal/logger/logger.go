@@ -2,6 +2,7 @@ package logger
 
 import (
 	"fmt"
+	abstractlogger "github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/domain/logger"
 	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
@@ -10,10 +11,7 @@ import (
 )
 
 type Logger interface {
-	Info(args ...interface{})
-	Error(args ...interface{})
-	Warn(args ...interface{})
-	Debug(args ...interface{})
+	abstractlogger.Logger
 	HTTPRequest(r *http.Request, args ...interface{})
 }
 
