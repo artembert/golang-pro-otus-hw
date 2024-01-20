@@ -11,3 +11,10 @@
 - `hw15_calendar` (от `hw14_calendar`) -> Merge Request в `hw14_calendar` (если уже вмержена, то в `master`)
 
 **Домашнее задание не принимается, если не принято ДЗ, предшедствующее ему.**
+
+## Goose scripts
+
+```shell
+#status
+goose -dir migrations postgres "postgres://calendar_admin:calendar_admin@localhost:55002/calendar" status
+```
