@@ -37,11 +37,6 @@ func main() {
 		log.Fatalf("failed to parse config %s: %s", configFile, err)
 	}
 
-	//logFile, err := logger.GetOutputFile(cfg.Logger.OutputPath)
-	//if err != nil {
-	//	log.Fatalf("failed to resolve log output %s: %s", cfg.Logger.OutputPath, err)
-	//}
-	//logg, err := logger.New(cfg.Logger.Level, logFile)
 	logg, err := loggerzap.New(cfg.Logger.Level, cfg.Logger.OutputPath)
 
 	store, err := fabric.Init(ctx, &cfg)
