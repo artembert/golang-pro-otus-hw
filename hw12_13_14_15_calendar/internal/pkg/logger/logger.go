@@ -19,7 +19,7 @@ type AppLogger struct {
 	logger *logrus.Logger
 }
 
-// TODO: Choose logger implementation: logger OR logger_uber
+// TODO: Choose logger implementation: logger OR loggerzap
 func New(level string, output io.Writer) (Logger, error) {
 	logLevel, err := logrus.ParseLevel(level)
 	if err != nil {

@@ -5,7 +5,7 @@ import (
 	"flag"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/app"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/config"
-	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/logger_uber"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/pkg/loggerzap"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage/fabric"
 	"log"
 	"os/signal"
@@ -40,7 +40,7 @@ func main() {
 	//	log.Fatalf("failed to resolve log output %s: %s", cfg.Logger.OutputPath, err)
 	//}
 	//logg, err := logger.New(cfg.Logger.Level, logFile)
-	logg, err := logger_uber.New(cfg.Logger.Level, cfg.Logger.OutputPath)
+	logg, err := loggerzap.New(cfg.Logger.Level, cfg.Logger.OutputPath)
 
 	store, err := fabric.Init(ctx, &cfg)
 	if err != nil {
