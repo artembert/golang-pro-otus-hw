@@ -12,6 +12,7 @@ type Event struct {
 	Description  *string
 	UserId       UserId
 	NotifyBefore *time.Duration
+	Notified     bool
 }
 
 type UserId string
