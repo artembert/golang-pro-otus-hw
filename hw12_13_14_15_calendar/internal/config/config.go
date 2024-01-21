@@ -46,10 +46,15 @@ type Config struct {
 func New(configFilePath string) (Config, error) {
 	cfg := Config{}
 
-	file, err := readConfigFromFile(configFilePath)
+	file, err := os.Open(configFilePath)
 	if err != nil {
-		return cfg, err
+		return cfg, fmt.Errorf("failed to open config gile %w", err)
 	}
+	defer func() {
+		if err := file.Close(); err != nil {
+			log.Fatalf("Unable to close config file %s", err)
+		}
+	}()
 
 	decoder := yaml.NewDecoder(file)
 
@@ -58,21 +63,6 @@ func New(configFilePath string) (Config, error) {
 	}
 
 	return cfg, nil
-}
-
-func readConfigFromFile(filePath string) (*os.File, error) {
-	file, err := os.Open(filePath)
-	if err != nil {
-		return nil, fmt.Errorf("failed to open config gile %w", err)
-	}
-
-	defer func() {
-		if err := file.Close(); err != nil {
-			log.Fatalf("Unable to close config file %s", err)
-		}
-	}()
-
-	return file, nil
 }
 
 func (dbConfig *DBConf) BuildDBUrl() string {
