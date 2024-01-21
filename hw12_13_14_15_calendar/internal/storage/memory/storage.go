@@ -16,7 +16,7 @@ type Logger interface {
 type Storage struct {
 	mu     sync.RWMutex
 	events eventsCollection
-	log    *Logger
+	_      *Logger
 }
 
 func New() *Storage {

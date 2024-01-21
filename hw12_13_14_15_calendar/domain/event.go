@@ -10,9 +10,9 @@ type Event struct {
 	StartTime    time.Time
 	Duration     time.Duration
 	Description  *string
-	UserId       UserId
+	UserID       UserID
 	NotifyBefore *time.Duration
 	Notified     bool
 }
 
-type UserId string
+type UserID string

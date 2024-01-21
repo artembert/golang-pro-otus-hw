@@ -32,15 +32,19 @@ func (s *Storage) Connect(ctx context.Context) error {
 	return nil
 }
 
-func (s *Storage) Close(ctx context.Context) error {
+func (s *Storage) Close(_ context.Context) error {
 	s.conn.Close()
 
 	return nil
 }
 
 func (s *Storage) CreateEvent(evt domain.Event) error {
-	query := `INSERT INTO events(title, description, start_time, duration, user_id, remind_for, notified) VALUES($1, $2, $3, $4, $5, $6, $7)`
-	if _, err := s.conn.Exec(s.ctx, query, evt.Title, evt.Description, evt.StartTime, evt.Duration, evt.UserId, evt.NotifyBefore, evt.Notified); err != nil {
+	q := `INSERT INTO
+		events(title, description, start_time, duration, user_id, remind_for, notified)
+		VALUES($1, $2, $3, $4, $5, $6, $7)`
+	if _, err := s.conn.Exec(
+		s.ctx, q, evt.Title, evt.Description, evt.StartTime, evt.Duration, evt.UserID, evt.NotifyBefore, evt.Notified,
+	); err != nil {
 		return err
 	}
 
@@ -58,8 +62,27 @@ func (s *Storage) DeleteEvent(evt domain.Event) error {
 }
 
 func (s *Storage) UpdateEvent(evt domain.Event) error {
-	query := `UPDATE events set title = $1, description = $2, start_time = $3, duration = $4, user_id = $5, remind_for = $6, notified = $7 WHERE id = $8`
-	if _, err := s.conn.Exec(s.ctx, query, evt.Title, evt.Description, evt.StartTime, evt.Duration, evt.UserId, evt.NotifyBefore, evt.Notified, evt.ID); err != nil {
+	q := `UPDATE events set
+		title = $1,
+		description = $2,
+		start_time = $3,
+		duration = $4,
+		user_id = $5,
+		remind_for = $6,
+		notified = $7
+	  	WHERE id = $8`
+	if _, err := s.conn.Exec(
+		s.ctx,
+		q,
+		evt.Title,
+		evt.Description,
+		evt.StartTime,
+		evt.Duration,
+		evt.UserID,
+		evt.NotifyBefore,
+		evt.Notified,
+		evt.ID,
+	); err != nil {
 		return err
 	}
 
@@ -67,13 +90,15 @@ func (s *Storage) UpdateEvent(evt domain.Event) error {
 }
 
 func (s *Storage) GetEventByID(id string) (domain.Event, error) {
-	query := `SELECT
+	q := `SELECT
 		title, description, start_time, duration, user_id, remind_for, notified
 		FROM events
 		WHERE id = $1`
 
 	var evt domain.Event
-	if err := s.conn.QueryRow(s.ctx, query, id).Scan(&evt.Title, &evt.Description, &evt.StartTime, &evt.Duration, &evt.UserId, &evt.NotifyBefore, &evt.Notified); err != nil {
+	if err := s.conn.QueryRow(s.ctx, q, id).Scan(
+		&evt.Title, &evt.Description, &evt.StartTime, &evt.Duration, &evt.UserID, &evt.NotifyBefore, &evt.Notified,
+	); err != nil {
 		return domain.Event{}, err
 	}
 

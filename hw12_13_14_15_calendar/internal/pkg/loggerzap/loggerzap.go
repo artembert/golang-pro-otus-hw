@@ -55,6 +55,6 @@ func (logger Logger) Warn(data ...interface{}) {
 	logger.zap.Warn(data)
 }
 
-func (logger Logger) HttpRequest(r *http.Request, data ...interface{}) {
+func (logger Logger) HTTPRequest(r *http.Request, data ...interface{}) {
 	logger.zap.With("IP", r.RemoteAddr).Info(data)
 }

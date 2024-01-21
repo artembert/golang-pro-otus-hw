@@ -71,7 +71,7 @@ func initRoutes(app Application, logger Logger) *http.ServeMux {
 	return requestHandler
 }
 
-func (h *Handler) Hello(writer http.ResponseWriter, r *http.Request) {
+func (h *Handler) Hello(writer http.ResponseWriter, _ *http.Request) {
 	writer.Header().Set("Content-Type", "text/html; charset=utf-8")
 	writer.WriteHeader(http.StatusOK)
 	writer.Write([]byte("Hello, it's calendar!"))

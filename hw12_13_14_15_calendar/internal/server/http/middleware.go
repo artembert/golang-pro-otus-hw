@@ -13,6 +13,17 @@ func loggingMiddleware(next http.Handler, logger logger.Logger) http.HandlerFunc
 		startTime := time.Now()
 		next.ServeHTTP(w, r)
 
-		logger.HttpRequest(r, fmt.Sprintf("%s %s %s %d %v %s", r.Method, r.URL.Path, r.Proto, http.StatusOK, time.Since(startTime), r.UserAgent()))
+		logger.HTTPRequest(
+			r,
+			fmt.Sprintf(
+				"%s %s %s %d %v %s",
+				r.Method,
+				r.URL.Path,
+				r.Proto,
+				http.StatusOK,
+				time.Since(startTime),
+				r.UserAgent(),
+			),
+		)
 	}
 }
