@@ -34,5 +34,6 @@ lint: install-lint-deps
 format:
 	go fmt ./...
 	gofumpt -l -w .
+	gci write ./**/*.go
 
 .PHONY: build run build-img run-img version test lint
