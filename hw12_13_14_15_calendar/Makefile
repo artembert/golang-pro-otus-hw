@@ -36,4 +36,7 @@ format:
 	gofumpt -l -w .
 	gci write ./**/*.go
 
+migrate-up:
+	goose -dir migrations postgres "postgres://calendar_admin:calendar_admin@localhost:55002/calendar" status
+
 .PHONY: build run build-img run-img version test lint
