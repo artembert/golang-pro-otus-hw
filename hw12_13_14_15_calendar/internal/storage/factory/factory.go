@@ -2,6 +2,7 @@ package factory
 
 import (
 	"context"
+
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/config"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/storage"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage/memory"

@@ -2,10 +2,11 @@ package internalhttp
 
 import (
 	"context"
-	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/logger"
-	"github.com/pkg/errors"
 	"net"
 	"net/http"
+
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/logger"
+	"github.com/pkg/errors"
 )
 
 type Config struct {

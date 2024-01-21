@@ -2,9 +2,10 @@ package internalhttp
 
 import (
 	"fmt"
-	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/logger"
 	"net/http"
 	"time"
+
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/logger"
 )
 
 func loggingMiddleware(next http.Handler, logger logger.Logger) http.HandlerFunc { //nolint:unused

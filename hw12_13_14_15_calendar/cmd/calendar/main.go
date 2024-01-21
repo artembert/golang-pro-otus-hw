@@ -3,15 +3,16 @@ package main
 import (
 	"context"
 	"flag"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/app"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/config"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/pkg/loggerzap"
 	internalhttp "github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/server/http"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage/factory"
-	"log"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 var configFile string

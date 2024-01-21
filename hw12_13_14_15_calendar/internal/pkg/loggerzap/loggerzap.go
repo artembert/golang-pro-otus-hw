@@ -2,9 +2,10 @@ package loggerzap
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/loglevel"
 	"go.uber.org/zap"
-	"net/http"
 )
 
 type Logger struct {
