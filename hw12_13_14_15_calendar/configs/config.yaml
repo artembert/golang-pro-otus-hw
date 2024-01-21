@@ -1,6 +1,6 @@
 logger:
   level: "info"
-  outputPath: "./log/app.log"
+  outputPath: "./logs/app.log"
 storage:
   type: "sql"
 db:
