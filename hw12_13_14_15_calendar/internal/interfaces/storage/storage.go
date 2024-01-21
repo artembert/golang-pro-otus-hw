@@ -23,6 +23,5 @@ type Actions interface {
 
 var (
 	ErrEventNotFound          = errors.New("event by id '%s' not found")
-	ErrEventAlreadyExist      = errors.New("event by id '%s' already exist")
 	ErrUnsupportedStorageType = errors.New("storage type '%s' is wot supported")
 )

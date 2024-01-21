@@ -5,6 +5,7 @@ import (
 
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/domain"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/storage"
+	"github.com/gofrs/uuid"
 )
 
 type eventsCollection map[string]domain.Event
@@ -29,7 +30,9 @@ func (s *Storage) CreateEvent(evt domain.Event) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	s.events[evt.ID] = evt
+	id := uuid.UUID{}.String()
+	evt.ID = id
+	s.events[id] = evt
 
 	return nil
 }
@@ -38,6 +41,9 @@ func (s *Storage) DeleteEvent(evt domain.Event) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
+	if _, ok := s.events[evt.ID]; !ok {
+		return storage.ErrEventNotFound
+	}
 	delete(s.events, evt.ID)
 
 	return nil

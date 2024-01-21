@@ -3,6 +3,7 @@ module github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar
 go 1.19
 
 require (
+	github.com/gofrs/uuid v4.0.0+incompatible
 	github.com/jackc/pgx/v4 v4.18.1
 	github.com/pkg/errors v0.8.1
 	github.com/stretchr/testify v1.8.1
