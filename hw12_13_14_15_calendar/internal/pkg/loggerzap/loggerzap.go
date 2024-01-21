@@ -55,13 +55,16 @@ func New(level loglevel.LogLevel, outputPath string) (*Logger, error) {
 	cfg := zap.NewProductionConfig()
 	cfg.Level = l
 	cfg.OutputPaths = []string{"stdout", outputPath}
-	logger, err := cfg.Build()
+
+	options := []zap.Option{zap.AddCallerSkip(1)}
+
+	logg, err := cfg.Build(options...)
 	if err != nil {
 		return nil, err
 	}
-	sugar := logger.Sugar()
+
 	return &Logger{
-		zap: sugar,
+		zap: logg.Sugar(),
 	}, nil
 }
 
