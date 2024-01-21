@@ -10,6 +10,7 @@ import (
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/loglevel"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 type Logger struct {
@@ -54,6 +55,7 @@ func New(level loglevel.LogLevel, outputPath string) (*Logger, error) {
 	}
 	cfg := zap.NewProductionConfig()
 	cfg.Level = l
+	cfg.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
 	cfg.OutputPaths = []string{"stdout", outputPath}
 
 	options := []zap.Option{zap.AddCallerSkip(1)}
