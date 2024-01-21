@@ -39,6 +39,9 @@ func main() {
 	}
 
 	logg, err := loggerzap.New(cfg.Logger.Level, cfg.Logger.OutputPath)
+	if err != nil {
+		log.Fatalf("failed to init logger: %s", err)
+	}
 
 	store, err := factory.Init(ctx, &cfg)
 	if err != nil {
