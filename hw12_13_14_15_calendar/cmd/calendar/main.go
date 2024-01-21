@@ -35,17 +35,20 @@ func main() {
 
 	cfg, err := config.New(configFile)
 	if err != nil {
-		log.Fatalf("failed to parse config %s: %s", configFile, err)
+		log.Printf("failed to parse config %s: %s", configFile, err)
+		os.Exit(1) //nolint:gocritic
 	}
 
 	logg, err := loggerzap.New(cfg.Logger.Level, cfg.Logger.OutputPath)
 	if err != nil {
-		log.Fatalf("failed to init logger: %s", err)
+		log.Printf("failed to init logger: %s", err)
+		os.Exit(1) //nolint:gocritic
 	}
 
 	store, err := factory.Init(ctx, &cfg)
 	if err != nil {
-		log.Fatalf("failed to connect to srorage %s, %s", cfg.Storage.Type, err)
+		log.Printf("failed to connect to srorage %s, %s", cfg.Storage.Type, err)
+		os.Exit(1) //nolint:gocritic
 	}
 
 	calendar := app.New(ctx, logg, store)
