@@ -53,7 +53,7 @@ func New(configFilePath string) (Config, error) {
 	}
 	defer func() {
 		if err := file.Close(); err != nil {
-			log.Fatalf("Unable to close config file %s", err)
+			log.Fatalf("unable to close config file %s", err)
 		}
 	}()
 
@@ -63,7 +63,7 @@ func New(configFilePath string) (Config, error) {
 	}
 
 	if err := yaml.Unmarshal(bytes, &cfg); err != nil {
-		_ = fmt.Errorf("Failed to decode config file: %w\n", err)
+		_ = fmt.Errorf("failed to decode config file: %w", err)
 		return Config{}, err
 	}
 

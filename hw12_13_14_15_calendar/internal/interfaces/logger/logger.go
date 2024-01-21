@@ -1,6 +1,9 @@
 package logger
 
-import "net/http"
+import (
+	"errors"
+	"net/http"
+)
 
 type Logger interface {
 	Info(args ...interface{})
@@ -9,3 +12,8 @@ type Logger interface {
 	Debug(args ...interface{})
 	HTTPRequest(r *http.Request, args ...interface{})
 }
+
+var (
+	ErrLoggerOutputFile  = errors.New("unable to create log file")
+	ErrLoggerEmptyOutput = errors.New("output path is empty")
+)

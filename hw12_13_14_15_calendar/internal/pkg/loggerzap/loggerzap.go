@@ -3,8 +3,12 @@ package loggerzap
 import (
 	"fmt"
 	"net/http"
+	"os"
+	"path/filepath"
 
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/logger"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/loglevel"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
 
@@ -12,7 +16,29 @@ type Logger struct {
 	zap *zap.SugaredLogger
 }
 
+func createFileIfNotExists(path string) error {
+	dir := filepath.Dir(path)
+
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		err = os.MkdirAll(dir, 0o755)
+		if err != nil {
+			return err
+		}
+	} else if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func New(level loglevel.LogLevel, outputPath string) (*Logger, error) {
+	if outputPath == "" {
+		return nil, logger.ErrLoggerEmptyOutput
+	}
+	if err := createFileIfNotExists(outputPath); err != nil {
+		return nil, errors.Wrap(logger.ErrLoggerOutputFile, err.Error())
+	}
+
 	l := zap.NewAtomicLevel()
 	switch level {
 	case loglevel.Debug:
