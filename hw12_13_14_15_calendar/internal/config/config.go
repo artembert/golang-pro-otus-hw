@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"time"
@@ -56,9 +57,13 @@ func New(configFilePath string) (Config, error) {
 		}
 	}()
 
-	decoder := yaml.NewDecoder(file)
+	bytes, err := io.ReadAll(file)
+	if err != nil {
+		return cfg, fmt.Errorf("failed to open config gile %w", err)
+	}
 
-	if err := decoder.Decode(cfg); err != nil {
+	if err := yaml.Unmarshal(bytes, &cfg); err != nil {
+		_ = fmt.Errorf("Failed to decode config file: %w\n", err)
 		return Config{}, err
 	}
 
