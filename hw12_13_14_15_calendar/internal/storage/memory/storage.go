@@ -71,7 +71,7 @@ func (s *Storage) GetAllEvents() ([]domain.Event, error) {
 	return events, nil
 }
 
-// Compile-time check that Storage implements storage.Storage
+// Compile-time check that Storage implements storage.Storage.
 var (
 	_ storage.Actions = &Storage{}
 	_ storage.Actions = (*Storage)(nil)
