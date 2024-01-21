@@ -2,12 +2,13 @@ package internalhttp
 
 import (
 	"context"
+	"errors"
 	"net"
 	"net/http"
 	"time"
 
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/logger"
-	"github.com/pkg/errors"
+	errorspkg "github.com/pkg/errors"
 )
 
 type Config struct {
@@ -53,7 +54,11 @@ func New(logger Logger, app Application, cfg Config) *Server {
 func (s *Server) Start(ctx context.Context) error {
 	s.logger.Info("starting server")
 	if err := s.server.ListenAndServe(); err != nil {
-		return errors.Wrap(err, "error while starting server")
+		if errors.Is(err, http.ErrServerClosed) {
+			s.logger.Info("http server stopped gracefully")
+			return nil
+		}
+		return errorspkg.Wrap(err, "error while starting server")
 	}
 
 	<-ctx.Done()
@@ -64,7 +69,7 @@ func (s *Server) Start(ctx context.Context) error {
 func (s *Server) Stop(ctx context.Context) error {
 	s.logger.Info("stopping server")
 	if err := s.server.Shutdown(ctx); err != nil {
-		return errors.Wrap(err, "error while stopping server")
+		return errorspkg.Wrap(err, "error while stopping server")
 	}
 
 	return nil
