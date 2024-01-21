@@ -7,7 +7,7 @@ import (
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/config"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/pkg/loggerzap"
 	internalhttp "github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/server/http"
-	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage/fabric"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage/factory"
 	"log"
 	"os"
 	"os/signal"
@@ -39,7 +39,7 @@ func main() {
 
 	logg, err := loggerzap.New(cfg.Logger.Level, cfg.Logger.OutputPath)
 
-	store, err := fabric.Init(ctx, &cfg)
+	store, err := factory.Init(ctx, &cfg)
 	if err != nil {
 		log.Fatalf("failed to connect to srorage %s, %s", cfg.Storage.Type, err)
 	}

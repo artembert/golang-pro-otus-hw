@@ -1,4 +1,4 @@
-package fabric
+package factory
 
 import (
 	"context"
