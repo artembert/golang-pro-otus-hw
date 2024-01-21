@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/loglevel"
 	"gopkg.in/yaml.v3"
@@ -28,8 +29,11 @@ type DBConf struct {
 }
 
 type ServerConf struct {
-	Host string `yaml:"host"`
-	Port string `yaml:"port"`
+	Host              string        `yaml:"host"`
+	Port              string        `yaml:"port"`
+	ReadHeaderTimeout time.Duration `yaml:"readHeaderTimeout"`
+	ReadTimeout       time.Duration `yaml:"readTimeout"`
+	WriteTimeout      time.Duration `yaml:"writeTimeout"`
 }
 
 type Config struct {

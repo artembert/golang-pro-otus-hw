@@ -4,14 +4,18 @@ import (
 	"context"
 	"net"
 	"net/http"
+	"time"
 
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/logger"
 	"github.com/pkg/errors"
 )
 
 type Config struct {
-	Host string
-	Port string
+	Host              string
+	Port              string
+	ReadHeaderTimeout time.Duration
+	ReadTimeout       time.Duration
+	WriteTimeout      time.Duration
 }
 
 type Server struct {
@@ -36,8 +40,11 @@ func New(logger Logger, app Application, cfg Config) *Server {
 
 	return &Server{
 		server: &http.Server{
-			Addr:    addr,
-			Handler: serveMux,
+			Addr:              addr,
+			Handler:           serveMux,
+			ReadHeaderTimeout: cfg.ReadHeaderTimeout,
+			ReadTimeout:       cfg.ReadTimeout,
+			WriteTimeout:      cfg.WriteTimeout,
 		},
 		logger: logger,
 	}
