@@ -30,6 +30,9 @@ func New(ctx context.Context, logger Logger, storage Storage) *App {
 
 func (a *App) CreateEvent(ctx context.Context, id, title string) error {
 	// TODO
+	_ = ctx
+	_ = id
+	_ = title
 	return nil
 	// return a.storage.CreateEvent(storage.Event{ID: id, Title: title})
 }
