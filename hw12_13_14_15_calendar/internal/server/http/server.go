@@ -52,7 +52,7 @@ func New(logger Logger, app Application, cfg Config) *Server {
 }
 
 func (s *Server) Start(ctx context.Context) error {
-	s.logger.Info("starting server")
+	s.logger.Info("starting server at", s.server.Addr)
 	if err := s.server.ListenAndServe(); err != nil {
 		if errors.Is(err, http.ErrServerClosed) {
 			s.logger.Info("http server stopped gracefully")
