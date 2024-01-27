@@ -6,6 +6,7 @@ import (
 
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/domain"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/storage"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage/timeutils"
 	"github.com/gofrs/uuid"
 )
 
@@ -31,7 +32,8 @@ func (s *Storage) CreateEvent(evt domain.Event) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	id := domain.EventID(uuid.UUID{}.String())
+	uuidV4 := uuid.Must(uuid.NewV4())
+	id := domain.EventID(uuidV4.String())
 	evt.ID = id
 	s.events[id] = evt
 
@@ -79,18 +81,34 @@ func (s *Storage) GetAllEvents() ([]domain.Event, error) {
 }
 
 func (s *Storage) GetEventsByDate(date time.Time) ([]domain.Event, error) {
-	// TODO implement me
-	panic("implement me")
+	startDate := timeutils.BeginningOfDay(date)
+	endDate := timeutils.EndOfDay(date)
+	return s.getEventsForPeriod(startDate, endDate)
 }
 
 func (s *Storage) GetEventsByWeek(startOfWeek time.Time) ([]domain.Event, error) {
-	// TODO implement me
-	panic("implement me")
+	startDate := timeutils.BeginningOfDay(startOfWeek)
+	endDate := startOfWeek.AddDate(0, 0, timeutils.DaysInWeek)
+	return s.getEventsForPeriod(startDate, endDate)
 }
 
 func (s *Storage) GetEventsByMonth(startOfMonth time.Time) ([]domain.Event, error) {
-	// TODO implement me
-	panic("implement me")
+	startDate := timeutils.BeginningOfDay(startOfMonth)
+	endDate := startOfMonth.AddDate(0, 0, timeutils.DaysInMonth)
+	return s.getEventsForPeriod(startDate, endDate)
+}
+
+func (s *Storage) getEventsForPeriod(startDate time.Time, endDate time.Time) ([]domain.Event, error) {
+	events := make([]domain.Event, 0)
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	for _, evt := range s.events {
+		if evt.StartTime.After(startDate) && evt.StartTime.Before(endDate) {
+			events = append(events, evt)
+		}
+	}
+	return events, nil
 }
 
 // Compile-time check that Storage implements storage.Storage.
