@@ -42,17 +42,19 @@ func (s *Storage) Close(_ context.Context) error {
 	return nil
 }
 
-func (s *Storage) CreateEvent(evt domain.Event) error {
+func (s *Storage) CreateEvent(evt domain.Event) (domain.EventID, error) {
 	q := `INSERT INTO
 		events(title, description, start_time, duration, user_id, remind_for, notified)
-		VALUES($1, $2, $3, $4, $5, $6, $7)`
-	if _, err := s.conn.Exec(
+		VALUES($1, $2, $3, $4, $5, $6, $7)
+		RETURNING id`
+	var id domain.EventID
+	if err := s.conn.QueryRow(
 		s.ctx, q, evt.Title, evt.Description, evt.StartTime, evt.Duration, evt.UserID, evt.NotifyBefore, evt.Notified,
-	); err != nil {
-		return err
+	).Scan(&id); err != nil {
+		return "", err
 	}
 
-	return nil
+	return id, nil
 }
 
 func (s *Storage) DeleteEvent(id domain.EventID) error {
