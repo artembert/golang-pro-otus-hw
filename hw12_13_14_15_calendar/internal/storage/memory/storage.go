@@ -79,17 +79,17 @@ func (s *Storage) GetAllEvents() ([]domain.Event, error) {
 }
 
 func (s *Storage) GetEventsByDate(date time.Time) ([]domain.Event, error) {
-	//TODO implement me
+	// TODO implement me
 	panic("implement me")
 }
 
 func (s *Storage) GetEventsByWeek(startOfWeek time.Time) ([]domain.Event, error) {
-	//TODO implement me
+	// TODO implement me
 	panic("implement me")
 }
 
 func (s *Storage) GetEventsByMonth(startOfMonth time.Time) ([]domain.Event, error) {
-	//TODO implement me
+	// TODO implement me
 	panic("implement me")
 }
 
