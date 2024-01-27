@@ -54,7 +54,7 @@ func TestStorage(t *testing.T) {
 		}
 
 		event.ID = created.ID
-		err = s.DeleteEvent(event)
+		err = s.DeleteEvent(event.ID)
 		require.NoError(t, err)
 
 		_, err = s.GetEventByID(event.ID)

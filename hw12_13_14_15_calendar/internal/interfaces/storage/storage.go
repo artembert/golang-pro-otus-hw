@@ -2,6 +2,7 @@ package storage
 
 import (
 	"errors"
+	"time"
 
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/domain"
 )
@@ -15,10 +16,11 @@ const (
 
 type Actions interface {
 	CreateEvent(evt domain.Event) error
-	DeleteEvent(evt domain.Event) error
-	UpdateEvent(evt domain.Event) error
-	GetEventByID(id string) (domain.Event, error)
-	GetAllEvents() ([]domain.Event, error)
+	DeleteEvent(id string) error
+	UpdateEvent(id string, evt domain.Event) error
+	GetEventsByDate(date time.Time) ([]domain.Event, error)
+	GetEventsByWeek(startOfWeek time.Time) ([]domain.Event, error)
+	GetEventsByMonth(startOfMonth time.Time) ([]domain.Event, error)
 }
 
 var (

@@ -2,6 +2,7 @@ package memorystorage
 
 import (
 	"sync"
+	"time"
 
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/domain"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/storage"
@@ -37,23 +38,23 @@ func (s *Storage) CreateEvent(evt domain.Event) error {
 	return nil
 }
 
-func (s *Storage) DeleteEvent(evt domain.Event) error {
+func (s *Storage) DeleteEvent(id string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	if _, ok := s.events[evt.ID]; !ok {
+	if _, ok := s.events[id]; !ok {
 		return storage.ErrEventNotFound
 	}
-	delete(s.events, evt.ID)
+	delete(s.events, id)
 
 	return nil
 }
 
-func (s *Storage) UpdateEvent(evt domain.Event) error {
+func (s *Storage) UpdateEvent(id string, evt domain.Event) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	s.events[evt.ID] = evt
+	s.events[id] = evt
 
 	return nil
 }
@@ -75,6 +76,21 @@ func (s *Storage) GetAllEvents() ([]domain.Event, error) {
 	}
 
 	return events, nil
+}
+
+func (s *Storage) GetEventsByDate(date time.Time) ([]domain.Event, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s *Storage) GetEventsByWeek(startOfWeek time.Time) ([]domain.Event, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s *Storage) GetEventsByMonth(startOfMonth time.Time) ([]domain.Event, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
 // Compile-time check that Storage implements storage.Storage.

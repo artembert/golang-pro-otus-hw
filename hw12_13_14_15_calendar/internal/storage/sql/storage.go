@@ -2,6 +2,7 @@ package sqlstorage
 
 import (
 	"context"
+	"time"
 
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/domain"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/storage"
@@ -51,17 +52,17 @@ func (s *Storage) CreateEvent(evt domain.Event) error {
 	return nil
 }
 
-func (s *Storage) DeleteEvent(evt domain.Event) error {
+func (s *Storage) DeleteEvent(id string) error {
 	query := `DELETE FROM events WHERE id = $1`
 
-	if _, err := s.conn.Exec(s.ctx, query, evt.ID); err != nil {
+	if _, err := s.conn.Exec(s.ctx, query, id); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (s *Storage) UpdateEvent(evt domain.Event) error {
+func (s *Storage) UpdateEvent(id string, evt domain.Event) error {
 	q := `UPDATE events set
 		title = $1,
 		description = $2,
@@ -81,7 +82,7 @@ func (s *Storage) UpdateEvent(evt domain.Event) error {
 		evt.UserID,
 		evt.NotifyBefore,
 		evt.Notified,
-		evt.ID,
+		id,
 	); err != nil {
 		return err
 	}
@@ -107,6 +108,21 @@ func (s *Storage) GetEventByID(id string) (domain.Event, error) {
 
 func (s *Storage) GetAllEvents() ([]domain.Event, error) {
 	return make([]domain.Event, 0), nil
+}
+
+func (s *Storage) GetEventsByDate(date time.Time) ([]domain.Event, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s *Storage) GetEventsByWeek(startOfWeek time.Time) ([]domain.Event, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s *Storage) GetEventsByMonth(startOfMonth time.Time) ([]domain.Event, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
 // Compile-time check that Storage implements storage.Storage.
