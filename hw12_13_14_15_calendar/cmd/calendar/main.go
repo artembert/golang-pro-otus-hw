@@ -45,7 +45,7 @@ func main() {
 		os.Exit(1) //nolint:gocritic
 	}
 
-	store, err := storagefactory.Init(ctx, &cfg, &logg)
+	store, err := storagefactory.Init(ctx, &cfg, logg)
 	if err != nil {
 		log.Printf("failed to connect to storage %s, %s", cfg.Storage.Type, err)
 		os.Exit(1) //nolint:gocritic

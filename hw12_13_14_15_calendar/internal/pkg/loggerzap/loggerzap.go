@@ -74,23 +74,23 @@ func New(level loglevel.LogLevel, outputPath string) (*Logger, error) {
 	}, nil
 }
 
-func (logger Logger) Info(data ...interface{}) {
+func (logger *Logger) Info(data ...interface{}) {
 	logger.zap.Info(data)
 }
 
-func (logger Logger) Error(data ...interface{}) {
+func (logger *Logger) Error(data ...interface{}) {
 	logger.zap.Error(data)
 }
 
-func (logger Logger) Debug(data ...interface{}) {
+func (logger *Logger) Debug(data ...interface{}) {
 	logger.zap.Debug(data)
 }
 
-func (logger Logger) Warn(data ...interface{}) {
+func (logger *Logger) Warn(data ...interface{}) {
 	logger.zap.Warn(data)
 }
 
-func (logger Logger) HTTPRequest(r *http.Request, data ...interface{}) {
+func (logger *Logger) HTTPRequest(r *http.Request, data ...interface{}) {
 	logger.zap.With("IP", r.RemoteAddr).Info(data)
 }
 

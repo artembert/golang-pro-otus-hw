@@ -5,6 +5,7 @@ import (
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/logger"
 
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/domain"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/logger"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/storage"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
@@ -17,11 +18,11 @@ type Storage struct {
 	ctx  context.Context
 	cfg  config
 	conn *pgxpool.Pool
-	logg *logger.Logger
+	logg logger.Logger
 }
 
-func New(ctx context.Context, cfg config, log *logger.Logger) *Storage {
-	return &Storage{ctx: ctx, cfg: cfg, logg: log}
+func New(ctx context.Context, cfg config, logg logger.Logger) *Storage {
+	return &Storage{ctx: ctx, cfg: cfg, logg: logg}
 }
 
 func (s *Storage) Connect(ctx context.Context) error {

@@ -11,7 +11,7 @@ import (
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage/sql"
 )
 
-func Init(ctx context.Context, cfg *config.Config, log *logger.Logger) (storage.Actions, error) {
+func Init(ctx context.Context, cfg *config.Config, log logger.Logger) (storage.Actions, error) {
 	switch storage.Type(cfg.Storage.Type) {
 	case storage.Memory:
 		return memorystorage.New(), nil
