@@ -2,11 +2,12 @@ package sqlstorage
 
 import (
 	"context"
-	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/logger"
+	"time"
 
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/domain"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/logger"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/storage"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage/timeutils"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
@@ -113,18 +114,56 @@ func (s *Storage) GetAllEvents() ([]domain.Event, error) {
 }
 
 func (s *Storage) GetEventsByDate(date time.Time) ([]domain.Event, error) {
-	//TODO implement me
-	panic("implement me")
+	startDate := timeutils.BeginningOfDay(date)
+	endDate := timeutils.EndOfDay(date)
+	return s.getEventsForPeriod(startDate, endDate)
 }
 
 func (s *Storage) GetEventsByWeek(startOfWeek time.Time) ([]domain.Event, error) {
-	//TODO implement me
-	panic("implement me")
+	startDate := timeutils.BeginningOfDay(startOfWeek)
+	endDate := startOfWeek.AddDate(0, 0, timeutils.DaysInWeek)
+	return s.getEventsForPeriod(startDate, endDate)
 }
 
 func (s *Storage) GetEventsByMonth(startOfMonth time.Time) ([]domain.Event, error) {
-	//TODO implement me
-	panic("implement me")
+	startDate := timeutils.BeginningOfDay(startOfMonth)
+	endDate := startOfMonth.AddDate(0, 0, timeutils.DaysInMonth)
+	return s.getEventsForPeriod(startDate, endDate)
+}
+
+func (s *Storage) getEventsForPeriod(startDate time.Time, endDate time.Time) ([]domain.Event, error) {
+	q := `SELECT 
+    	title, description, start_time, duration, user_id, remind_for, notified 
+	FROM
+		events 
+	WHERE 
+	    start_time >= $1 AND start_time < $2 
+	ORDER BY 
+	    start_time
+	`
+	events := make([]domain.Event, 0)
+	rows, err := s.conn.Query(s.ctx, q, startDate, endDate)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var evt domain.Event
+		if err := rows.Scan(
+			&evt.Title, &evt.Description, &evt.StartTime, &evt.Duration, &evt.UserID, &evt.NotifyBefore, &evt.Notified,
+		); err != nil {
+			s.logg.Warn("failed to scan row: " + err.Error())
+		} else {
+			events = append(events, evt)
+		}
+	}
+	if err := rows.Err(); err != nil {
+		s.logg.Error("failed to scan rows: " + err.Error())
+		return events, err
+	}
+
+	return events, nil
 }
 
 // Compile-time check that Storage implements storage.Storage.
