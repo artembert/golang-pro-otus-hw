@@ -18,7 +18,7 @@ type Logger interface {
 }
 
 type Storage interface {
-	storage.Actions
+	storage.EventsRepository
 }
 
 func New(ctx context.Context, logger Logger, storage Storage) *App {

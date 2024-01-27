@@ -14,7 +14,7 @@ const (
 	SQL    Type = "sql"
 )
 
-type Actions interface {
+type EventsRepository interface {
 	CreateEvent(evt domain.Event) error
 	DeleteEvent(id domain.EventID) error
 	UpdateEvent(id domain.EventID, evt domain.Event) error

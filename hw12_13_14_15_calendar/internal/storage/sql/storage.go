@@ -168,6 +168,6 @@ func (s *Storage) getEventsForPeriod(startDate time.Time, endDate time.Time) ([]
 
 // Compile-time check that Storage implements storage.Storage.
 var (
-	_ storage.Actions = &Storage{}
-	_ storage.Actions = (*Storage)(nil)
+	_ storage.EventsRepository = &Storage{}
+	_ storage.EventsRepository = (*Storage)(nil)
 )
