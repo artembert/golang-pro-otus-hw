@@ -10,7 +10,7 @@ import (
 	"github.com/gofrs/uuid"
 )
 
-type eventsCollection map[domain.EventID]domain.Event
+type eventsCollection map[domain.EventID]*domain.Event
 
 type Logger interface {
 	Error(msg string)
@@ -28,14 +28,23 @@ func New() *Storage {
 	}
 }
 
-func (s *Storage) CreateEvent(evt domain.Event) (domain.EventID, error) {
+func (s *Storage) CreateEvent(evt *domain.Event) (domain.EventID, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	uuidV4 := uuid.Must(uuid.NewV4())
 	id := domain.EventID(uuidV4.String())
 	evt.ID = id
-	s.events[id] = evt
+	s.events[id] = &domain.Event{
+		ID:           id,
+		Title:        evt.Title,
+		StartTime:    evt.StartTime,
+		Duration:     evt.Duration,
+		Description:  evt.Description,
+		UserID:       evt.UserID,
+		NotifyBefore: evt.NotifyBefore,
+		Notified:     evt.Notified,
+	}
 
 	return id, nil
 }
@@ -52,7 +61,7 @@ func (s *Storage) DeleteEvent(id domain.EventID) error {
 	return nil
 }
 
-func (s *Storage) UpdateEvent(id domain.EventID, evt domain.Event) error {
+func (s *Storage) UpdateEvent(id domain.EventID, evt *domain.Event) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -61,17 +70,17 @@ func (s *Storage) UpdateEvent(id domain.EventID, evt domain.Event) error {
 	return nil
 }
 
-func (s *Storage) GetEventByID(id domain.EventID) (domain.Event, error) {
+func (s *Storage) GetEventByID(id domain.EventID) (*domain.Event, error) {
 	evt, ok := s.events[id]
 	if !ok {
-		return domain.Event{}, storage.ErrEventNotFound
+		return &domain.Event{}, storage.ErrEventNotFound
 	}
 
 	return evt, nil
 }
 
-func (s *Storage) GetAllEvents() ([]domain.Event, error) {
-	events := make([]domain.Event, 0)
+func (s *Storage) GetAllEvents() ([]*domain.Event, error) {
+	events := make([]*domain.Event, 0)
 
 	for _, evt := range s.events {
 		events = append(events, evt)
@@ -80,26 +89,26 @@ func (s *Storage) GetAllEvents() ([]domain.Event, error) {
 	return events, nil
 }
 
-func (s *Storage) GetEventsByDate(date time.Time) ([]domain.Event, error) {
+func (s *Storage) GetEventsByDate(date time.Time) ([]*domain.Event, error) {
 	startDate := timeutils.BeginningOfDay(date)
 	endDate := timeutils.EndOfDay(date)
 	return s.getEventsForPeriod(startDate, endDate)
 }
 
-func (s *Storage) GetEventsByWeek(startOfWeek time.Time) ([]domain.Event, error) {
+func (s *Storage) GetEventsByWeek(startOfWeek time.Time) ([]*domain.Event, error) {
 	startDate := timeutils.BeginningOfDay(startOfWeek)
 	endDate := startOfWeek.AddDate(0, 0, timeutils.DaysInWeek)
 	return s.getEventsForPeriod(startDate, endDate)
 }
 
-func (s *Storage) GetEventsByMonth(startOfMonth time.Time) ([]domain.Event, error) {
+func (s *Storage) GetEventsByMonth(startOfMonth time.Time) ([]*domain.Event, error) {
 	startDate := timeutils.BeginningOfDay(startOfMonth)
 	endDate := startOfMonth.AddDate(0, 0, timeutils.DaysInMonth)
 	return s.getEventsForPeriod(startDate, endDate)
 }
 
-func (s *Storage) getEventsForPeriod(startDate time.Time, endDate time.Time) ([]domain.Event, error) {
-	events := make([]domain.Event, 0)
+func (s *Storage) getEventsForPeriod(startDate time.Time, endDate time.Time) ([]*domain.Event, error) {
+	events := make([]*domain.Event, 0)
 	s.mu.Lock()
 	defer s.mu.Unlock()
 

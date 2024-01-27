@@ -4,7 +4,6 @@ import (
 	"time"
 )
 
-// Event TODO: pass via link not value
 type Event struct {
 	ID           EventID
 	Title        string

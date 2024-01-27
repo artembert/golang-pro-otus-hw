@@ -28,21 +28,21 @@ func TestStorage(t *testing.T) {
 		s := New()
 		event := getEvent(t)
 
-		id, err := s.CreateEvent(event)
+		id, err := s.CreateEvent(&event)
 		require.NoError(t, err)
 
-		var created domain.Event = s.events[id]
+		var created *domain.Event = s.events[id]
 		event.ID = id
 
 		require.NoError(t, err)
-		require.EqualValues(t, event, created)
+		require.EqualValues(t, &event, created)
 	})
 
 	t.Run("DeleteEvent", func(t *testing.T) {
 		s := New()
 		event := getEvent(t)
 
-		id, err := s.CreateEvent(event)
+		id, err := s.CreateEvent(&event)
 		require.NoError(t, err)
 
 		err = s.DeleteEvent(id)
@@ -64,10 +64,10 @@ func TestStorage(t *testing.T) {
 		event3Jan2007 := getEvent(t)
 		event3Jan2007.StartTime = time.Date(2007, 1, 3, 0, 0, 0, 0, time.Local)
 
-		_, _ = s.CreateEvent(event1Jan2007)
-		_, _ = s.CreateEvent(event2Jan2007)
-		_, _ = s.CreateEvent(event2Jan2007Midday)
-		_, _ = s.CreateEvent(event3Jan2007)
+		_, _ = s.CreateEvent(&event1Jan2007)
+		_, _ = s.CreateEvent(&event2Jan2007)
+		_, _ = s.CreateEvent(&event2Jan2007Midday)
+		_, _ = s.CreateEvent(&event3Jan2007)
 
 		events, err := s.GetEventsByDate(targetDay)
 		eventsDates := make([]time.Time, 0)
@@ -90,10 +90,10 @@ func TestStorage(t *testing.T) {
 		event20Jan2007 := getEvent(t)
 		event20Jan2007.StartTime = time.Date(2007, 1, 20, 0, 0, 0, 0, time.Local)
 
-		_, _ = s.CreateEvent(event1Jan2007)
-		_, _ = s.CreateEvent(event12Jan2007)
-		_, _ = s.CreateEvent(event13Jan2007)
-		_, _ = s.CreateEvent(event20Jan2007)
+		_, _ = s.CreateEvent(&event1Jan2007)
+		_, _ = s.CreateEvent(&event12Jan2007)
+		_, _ = s.CreateEvent(&event13Jan2007)
+		_, _ = s.CreateEvent(&event20Jan2007)
 
 		events, err := s.GetEventsByWeek(time.Date(2007, 1, 10, 0, 0, 0, 0, time.Local))
 		eventsDates := make([]time.Time, 0)

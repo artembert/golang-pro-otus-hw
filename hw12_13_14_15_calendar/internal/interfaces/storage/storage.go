@@ -15,12 +15,12 @@ const (
 )
 
 type EventsRepository interface {
-	CreateEvent(evt domain.Event) (domain.EventID, error)
+	CreateEvent(evt *domain.Event) (domain.EventID, error)
 	DeleteEvent(id domain.EventID) error
-	UpdateEvent(id domain.EventID, evt domain.Event) error
-	GetEventsByDate(date time.Time) ([]domain.Event, error)
-	GetEventsByWeek(startOfWeek time.Time) ([]domain.Event, error)
-	GetEventsByMonth(startOfMonth time.Time) ([]domain.Event, error)
+	UpdateEvent(id domain.EventID, evt *domain.Event) error
+	GetEventsByDate(date time.Time) ([]*domain.Event, error)
+	GetEventsByWeek(startOfWeek time.Time) ([]*domain.Event, error)
+	GetEventsByMonth(startOfMonth time.Time) ([]*domain.Event, error)
 }
 
 var (
