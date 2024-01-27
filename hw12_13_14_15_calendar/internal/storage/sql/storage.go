@@ -42,7 +42,7 @@ func (s *Storage) Close(_ context.Context) error {
 	return nil
 }
 
-func (s *Storage) CreateEvent(evt domain.Event) (domain.EventID, error) {
+func (s *Storage) CreateEvent(evt *domain.Event) (domain.EventID, error) {
 	q := `INSERT INTO
 		events(title, description, start_time, duration, user_id, remind_for, notified)
 		VALUES($1, $2, $3, $4, $5, $6, $7)
@@ -67,7 +67,7 @@ func (s *Storage) DeleteEvent(id domain.EventID) error {
 	return nil
 }
 
-func (s *Storage) UpdateEvent(id domain.EventID, evt domain.Event) error {
+func (s *Storage) UpdateEvent(id domain.EventID, evt *domain.Event) error {
 	q := `UPDATE events set
 		title = $1,
 		description = $2,
@@ -95,7 +95,7 @@ func (s *Storage) UpdateEvent(id domain.EventID, evt domain.Event) error {
 	return nil
 }
 
-func (s *Storage) GetEventByID(id domain.EventID) (domain.Event, error) {
+func (s *Storage) GetEventByID(id domain.EventID) (*domain.Event, error) {
 	q := `SELECT
 		title, description, start_time, duration, user_id, remind_for, notified
 		FROM events
@@ -105,35 +105,35 @@ func (s *Storage) GetEventByID(id domain.EventID) (domain.Event, error) {
 	if err := s.conn.QueryRow(s.ctx, q, id).Scan(
 		&evt.Title, &evt.Description, &evt.StartTime, &evt.Duration, &evt.UserID, &evt.NotifyBefore, &evt.Notified,
 	); err != nil {
-		return domain.Event{}, err
+		return &domain.Event{}, err
 	}
 
-	return evt, nil
+	return &evt, nil
 }
 
 func (s *Storage) GetAllEvents() ([]domain.Event, error) {
 	return make([]domain.Event, 0), nil
 }
 
-func (s *Storage) GetEventsByDate(date time.Time) ([]domain.Event, error) {
+func (s *Storage) GetEventsByDate(date time.Time) ([]*domain.Event, error) {
 	startDate := timeutils.BeginningOfDay(date)
 	endDate := timeutils.EndOfDay(date)
 	return s.getEventsForPeriod(startDate, endDate)
 }
 
-func (s *Storage) GetEventsByWeek(startOfWeek time.Time) ([]domain.Event, error) {
+func (s *Storage) GetEventsByWeek(startOfWeek time.Time) ([]*domain.Event, error) {
 	startDate := timeutils.BeginningOfDay(startOfWeek)
 	endDate := startOfWeek.AddDate(0, 0, timeutils.DaysInWeek)
 	return s.getEventsForPeriod(startDate, endDate)
 }
 
-func (s *Storage) GetEventsByMonth(startOfMonth time.Time) ([]domain.Event, error) {
+func (s *Storage) GetEventsByMonth(startOfMonth time.Time) ([]*domain.Event, error) {
 	startDate := timeutils.BeginningOfDay(startOfMonth)
 	endDate := startOfMonth.AddDate(0, 0, timeutils.DaysInMonth)
 	return s.getEventsForPeriod(startDate, endDate)
 }
 
-func (s *Storage) getEventsForPeriod(startDate time.Time, endDate time.Time) ([]domain.Event, error) {
+func (s *Storage) getEventsForPeriod(startDate time.Time, endDate time.Time) ([]*domain.Event, error) {
 	q := `SELECT 
     	title, description, start_time, duration, user_id, remind_for, notified 
 	FROM
@@ -143,7 +143,7 @@ func (s *Storage) getEventsForPeriod(startDate time.Time, endDate time.Time) ([]
 	ORDER BY 
 	    start_time
 	`
-	events := make([]domain.Event, 0)
+	events := make([]*domain.Event, 0)
 	rows, err := s.conn.Query(s.ctx, q, startDate, endDate)
 	if err != nil {
 		return nil, err
@@ -157,7 +157,7 @@ func (s *Storage) getEventsForPeriod(startDate time.Time, endDate time.Time) ([]
 		); err != nil {
 			s.logg.Warn("failed to scan row: " + err.Error())
 		} else {
-			events = append(events, evt)
+			events = append(events, &evt)
 		}
 	}
 	if err := rows.Err(); err != nil {
