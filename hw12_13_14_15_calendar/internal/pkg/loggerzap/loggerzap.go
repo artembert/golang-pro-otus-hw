@@ -32,6 +32,10 @@ func createFileIfNotExists(path string) error {
 	return nil
 }
 
+func Factory(level loglevel.LogLevel, outputPath string) (logger.Logger, error) {
+	return New(level, outputPath)
+}
+
 func New(level loglevel.LogLevel, outputPath string) (*Logger, error) {
 	if outputPath == "" {
 		return nil, logger.ErrLoggerEmptyOutput
@@ -89,3 +93,9 @@ func (logger Logger) Warn(data ...interface{}) {
 func (logger Logger) HTTPRequest(r *http.Request, data ...interface{}) {
 	logger.zap.With("IP", r.RemoteAddr).Info(data)
 }
+
+// Compile-time check that Logger implements logger.Logger.
+var (
+	_ logger.Logger = &Logger{}
+	_ logger.Logger = (*Logger)(nil)
+)
