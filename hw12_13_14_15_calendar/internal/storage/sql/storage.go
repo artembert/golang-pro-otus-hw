@@ -52,7 +52,7 @@ func (s *Storage) CreateEvent(evt domain.Event) error {
 	return nil
 }
 
-func (s *Storage) DeleteEvent(id string) error {
+func (s *Storage) DeleteEvent(id domain.EventID) error {
 	query := `DELETE FROM events WHERE id = $1`
 
 	if _, err := s.conn.Exec(s.ctx, query, id); err != nil {
@@ -62,7 +62,7 @@ func (s *Storage) DeleteEvent(id string) error {
 	return nil
 }
 
-func (s *Storage) UpdateEvent(id string, evt domain.Event) error {
+func (s *Storage) UpdateEvent(id domain.EventID, evt domain.Event) error {
 	q := `UPDATE events set
 		title = $1,
 		description = $2,
@@ -90,7 +90,7 @@ func (s *Storage) UpdateEvent(id string, evt domain.Event) error {
 	return nil
 }
 
-func (s *Storage) GetEventByID(id string) (domain.Event, error) {
+func (s *Storage) GetEventByID(id domain.EventID) (domain.Event, error) {
 	q := `SELECT
 		title, description, start_time, duration, user_id, remind_for, notified
 		FROM events

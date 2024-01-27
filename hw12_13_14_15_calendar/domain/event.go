@@ -5,7 +5,7 @@ import (
 )
 
 type Event struct {
-	ID           string
+	ID           EventID
 	Title        string
 	StartTime    time.Time
 	Duration     time.Duration
@@ -16,3 +16,5 @@ type Event struct {
 }
 
 type UserID string
+
+type EventID string
