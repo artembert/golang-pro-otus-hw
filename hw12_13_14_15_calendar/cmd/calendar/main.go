@@ -51,7 +51,11 @@ func main() {
 		os.Exit(1) //nolint:gocritic
 	}
 
-	calendar := app.New(ctx, logg, store)
+	calendar, err := app.New(ctx, logg, store)
+	if err != nil {
+		log.Printf("failed to create an app %s", err)
+		os.Exit(1) //nolint:gocritic
+	}
 
 	server := internalhttp.New(logg, calendar, internalhttp.Config(cfg.Server))
 

@@ -13,6 +13,11 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/app"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/server/http/event"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/pkg/api/openapi"
+	"github.com/go-chi/chi/v5"
+
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/logger"
 	errorspkg "github.com/pkg/errors"
 )
@@ -34,21 +39,17 @@ type Logger interface {
 	logger.Logger
 }
 
-type Application interface { // TODO
-}
-
-type Handler struct {
-	App Application
-}
-
-func New(logger Logger, app Application, cfg Config) *Server {
-	serveMux := initRoutes(app, logger)
+func New(logger Logger, app app.Application, cfg Config) *Server {
+	handler := event.NewEventHandler(app, logger)
+	router := chi.NewRouter()
+	router.Use(loggingMiddleware(logger))
+	openapi.HandlerFromMux(handler, router)
 	addr := net.JoinHostPort(cfg.Host, cfg.Port)
 
 	return &Server{
 		server: &http.Server{
 			Addr:              addr,
-			Handler:           serveMux,
+			Handler:           router,
 			ReadHeaderTimeout: cfg.ReadHeaderTimeout,
 			ReadTimeout:       cfg.ReadTimeout,
 			WriteTimeout:      cfg.WriteTimeout,
@@ -79,18 +80,4 @@ func (s *Server) Stop(ctx context.Context) error {
 	}
 
 	return nil
-}
-
-func initRoutes(app Application, logger Logger) *http.ServeMux {
-	handler := Handler{App: app}
-	requestHandler := http.NewServeMux()
-	requestHandler.HandleFunc("/hello", loggingMiddleware(http.HandlerFunc(handler.Hello), logger))
-
-	return requestHandler
-}
-
-func (h *Handler) Hello(writer http.ResponseWriter, _ *http.Request) {
-	writer.Header().Set("Content-Type", "text/html; charset=utf-8")
-	writer.WriteHeader(http.StatusOK)
-	writer.Write([]byte("Hello, it's calendar!"))
 }
