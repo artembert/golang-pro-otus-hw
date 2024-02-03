@@ -39,4 +39,7 @@ format:
 migrate-up:
 	goose -dir migrations postgres "postgres://calendar_admin:calendar_admin@localhost:55002/calendar" status
 
+generate:
+	go generate github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/server/http
+
 .PHONY: build run build-img run-img version test lint
