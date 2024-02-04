@@ -29,6 +29,7 @@ func (handler *eventHandler) PostEvents(w http.ResponseWriter, r *http.Request) 
 	}
 	res, err := handler.app.CreateEvent(r.Context(), request)
 	if err != nil {
+		handler.logger.Error("create event error: " + err.Error())
 		handler.writeError(w, err)
 		return
 	}

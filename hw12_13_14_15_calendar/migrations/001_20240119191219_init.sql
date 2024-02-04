@@ -7,7 +7,7 @@ CREATE table events
     start_time  timestamp                                  NOT NULL,
     duration interval NOT NULL,
     description text,
-    user_id     UUID                                       NOT NULL,
+    user_id     VARCHAR                                    NOT NULL,
     remind_for  interval
 );
 

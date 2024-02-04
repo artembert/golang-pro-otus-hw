@@ -8,6 +8,7 @@ import (
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/logger"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/storage"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage/timeutils"
+	"github.com/gofrs/uuid"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
@@ -52,10 +53,9 @@ func (s *Storage) CreateEvent(evt *domain.Event) (*domain.Event, error) {
 	if err := s.conn.QueryRow(
 		s.ctx, q, evt.Title, evt.Description, evt.StartTime, evt.Duration, evt.UserID, evt.NotifyBefore, evt.Notified,
 	).Scan(&id); err != nil {
-		var newEvt *domain.Event
-		return newEvt, err
+		return nil, err
 	}
-
+	s.logg.Debug("Event created with ID: " + string(id))
 	return s.GetEventByID(id)
 }
 
@@ -98,13 +98,19 @@ func (s *Storage) UpdateEvent(id domain.EventID, evt *domain.Event) error {
 }
 
 func (s *Storage) GetEventByID(id domain.EventID) (*domain.Event, error) {
+	s.logg.Debug("Get event by ID: " + string(id))
 	q := `SELECT
 		title, description, start_time, duration, user_id, remind_for, notified
 		FROM events
 		WHERE id = $1`
 
+	evtUuid, err := uuid.FromString(string(id))
+	if err != nil {
+		s.logg.Error("failed to convert id to uuid: " + err.Error())
+		return nil, err
+	}
 	var evt domain.Event
-	if err := s.conn.QueryRow(s.ctx, q, id).Scan(
+	if err := s.conn.QueryRow(s.ctx, q, evtUuid).Scan(
 		&evt.Title, &evt.Description, &evt.StartTime, &evt.Duration, &evt.UserID, &evt.NotifyBefore, &evt.Notified,
 	); err != nil {
 		return &domain.Event{}, err
