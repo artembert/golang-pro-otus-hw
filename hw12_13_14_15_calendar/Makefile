@@ -4,6 +4,9 @@ DOCKER_IMG="calendar:develop"
 GIT_HASH := $(shell git log --format="%h" -n 1)
 LDFLAGS := -X main.release="develop" -X main.buildDate=$(shell date -u +%Y-%m-%dT%H:%M:%S) -X main.gitHash=$(GIT_HASH)
 
+docker-compose-up:
+	docker-compose up -d
+
 build:
 	go build -v -o $(BIN) -ldflags "$(LDFLAGS)" ./cmd/calendar
 
@@ -36,8 +39,12 @@ format:
 	gofumpt -l -w .
 	gci write ./**/*.go
 
+prepare-database:
+	docker-compose exec postgres psql -U postgres -d postgres -c "CREATE USER calendar_admin WITH PASSWORD 'calendar_admin';"
+	docker-compose exec postgres psql -U postgres -d postgres -c "CREATE DATABASE calendar OWNER calendar_admin;"
+
 migrate-up:
-	goose -dir migrations postgres "postgres://calendar_admin:calendar_admin@localhost:55002/calendar" status
+	goose -dir migrations postgres "postgres://calendar_admin:calendar_admin@localhost:5432/calendar" up
 
 generate:
 	go generate github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/server/http
