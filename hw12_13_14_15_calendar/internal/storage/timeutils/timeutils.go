@@ -13,8 +13,6 @@ const (
 	endOfDayHour   = 23
 	endOfDayMinute = 59
 	endOfDaySecond = 59
-
-	dateTimeLayout = "2006-01-02T15:04:05"
 )
 
 // Date ...
@@ -38,9 +36,4 @@ func EndOfDay(t time.Time) time.Time {
 
 	return time.Date(y, m, d,
 		endOfDayHour, endOfDayMinute, endOfDaySecond, int(time.Second-time.Nanosecond), t.Location())
-}
-
-// RoundUpToMinutes ...
-func RoundUpToMinutes(date time.Time) time.Time {
-	return time.Date(date.Year(), date.Month(), date.Day(), date.Hour(), date.Minute(), 0, 0, date.Location())
 }
