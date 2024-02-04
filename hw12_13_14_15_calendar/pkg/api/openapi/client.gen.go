@@ -433,7 +433,7 @@ func (r GetEventsResponse) StatusCode() int {
 type PostEventsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Event
+	JSON201      *Event
 	JSON400      *Error
 }
 
@@ -577,12 +577,12 @@ func ParsePostEventsResponse(rsp *http.Response) (*PostEventsResponse, error) {
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest Event
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
-		response.JSON200 = &dest
+		response.JSON201 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest Error
