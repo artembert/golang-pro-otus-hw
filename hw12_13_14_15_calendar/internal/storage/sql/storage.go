@@ -42,7 +42,7 @@ func (s *Storage) Close(_ context.Context) error {
 	return nil
 }
 
-func (s *Storage) CreateEvent(evt *domain.Event) (domain.EventID, error) {
+func (s *Storage) CreateEvent(evt *domain.Event) (*domain.Event, error) {
 	q := `INSERT INTO
 		events(title, description, start_time, duration, user_id, remind_for, notified)
 		VALUES($1, $2, $3, $4, $5, $6, $7)
@@ -51,10 +51,11 @@ func (s *Storage) CreateEvent(evt *domain.Event) (domain.EventID, error) {
 	if err := s.conn.QueryRow(
 		s.ctx, q, evt.Title, evt.Description, evt.StartTime, evt.Duration, evt.UserID, evt.NotifyBefore, evt.Notified,
 	).Scan(&id); err != nil {
-		return "", err
+		var newEvt *domain.Event
+		return newEvt, err
 	}
 
-	return id, nil
+	return s.GetEventByID(id)
 }
 
 func (s *Storage) DeleteEvent(id domain.EventID) error {

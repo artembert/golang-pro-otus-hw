@@ -28,7 +28,7 @@ func New() *Storage {
 	}
 }
 
-func (s *Storage) CreateEvent(evt *domain.Event) (domain.EventID, error) {
+func (s *Storage) CreateEvent(evt *domain.Event) (*domain.Event, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -46,7 +46,7 @@ func (s *Storage) CreateEvent(evt *domain.Event) (domain.EventID, error) {
 		Notified:     evt.Notified,
 	}
 
-	return id, nil
+	return s.GetEventByID(id)
 }
 
 func (s *Storage) DeleteEvent(id domain.EventID) error {

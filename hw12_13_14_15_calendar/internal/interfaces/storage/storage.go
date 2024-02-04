@@ -15,7 +15,7 @@ const (
 )
 
 type EventsRepository interface {
-	CreateEvent(evt *domain.Event) (domain.EventID, error)
+	CreateEvent(evt *domain.Event) (*domain.Event, error)
 	DeleteEvent(id domain.EventID) error
 	UpdateEvent(id domain.EventID, evt *domain.Event) error
 	GetEventsByDate(date time.Time) ([]*domain.Event, error)
