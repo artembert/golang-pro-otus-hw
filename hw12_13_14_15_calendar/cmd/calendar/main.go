@@ -3,24 +3,29 @@ package main
 import (
 	"context"
 	"flag"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
-	"github.com/fixme_my_friend/hw12_13_14_15_calendar/internal/app"
-	"github.com/fixme_my_friend/hw12_13_14_15_calendar/internal/logger"
-	internalhttp "github.com/fixme_my_friend/hw12_13_14_15_calendar/internal/server/http"
-	memorystorage "github.com/fixme_my_friend/hw12_13_14_15_calendar/internal/storage/memory"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/app"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/config"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/pkg/loggerzap"
+	internalhttp "github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/server/http"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage/factory"
 )
 
 var configFile string
 
 func init() {
-	flag.StringVar(&configFile, "config", "/etc/calendar/config.toml", "Path to configuration file")
+	flag.StringVar(&configFile, "config", "configs/config.yaml", "Path to configuration file")
 }
 
 func main() {
+	ctx, cancel := signal.NotifyContext(context.Background(),
+		syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
+	defer cancel()
+
 	flag.Parse()
 
 	if flag.Arg(0) == "version" {
@@ -28,23 +33,30 @@ func main() {
 		return
 	}
 
-	config := NewConfig()
-	logg := logger.New(config.Logger.Level)
+	cfg, err := config.New(configFile)
+	if err != nil {
+		log.Printf("failed to parse config %s: %s", configFile, err)
+		os.Exit(1) //nolint:gocritic
+	}
 
-	storage := memorystorage.New()
-	calendar := app.New(logg, storage)
+	logg, err := loggerzap.Factory(cfg.Logger.Level, cfg.Logger.OutputPath)
+	if err != nil {
+		log.Printf("failed to init logger: %s", err)
+		os.Exit(1) //nolint:gocritic
+	}
 
-	server := internalhttp.NewServer(logg, calendar)
+	store, err := storagefactory.Init(ctx, &cfg, logg)
+	if err != nil {
+		log.Printf("failed to connect to storage %s, %s", cfg.Storage.Type, err)
+		os.Exit(1) //nolint:gocritic
+	}
 
-	ctx, cancel := signal.NotifyContext(context.Background(),
-		syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
-	defer cancel()
+	calendar := app.New(ctx, logg, store)
+
+	server := internalhttp.New(logg, calendar, internalhttp.Config(cfg.Server))
 
 	go func() {
 		<-ctx.Done()
-
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
-		defer cancel()
 
 		if err := server.Stop(ctx); err != nil {
 			logg.Error("failed to stop http server: " + err.Error())

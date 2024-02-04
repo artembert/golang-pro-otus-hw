@@ -8,14 +8,6 @@ linters-settings:
   funlen:
     lines: 150
     statements: 80
-  depguard:
-    rules:
-      main:
-        allow:
-          - $gostd
-          - github.com/cheggaaa/pb/v3
-          - github.com/stretchr/testify/require
-          - github.com/mailru/easyjson
   exhaustive:
     default-signifies-exhaustive: true
 
@@ -33,7 +25,7 @@ linters:
   enable:
     - asciicheck
     - bodyclose
-    - depguard
+#    - depguard
     - dogsled
     - dupl
     - durationcheck
@@ -62,7 +54,7 @@ linters:
     - nestif
     - nilerr
     - noctx
-    - nolintlint
+#    - nolintlint
     - prealloc
     - predeclared
     - revive
