@@ -17,7 +17,6 @@ const (
 
 // Date ...
 const (
-	DateLayout  = "2006-01-02"
 	DaysInWeek  = 7
 	DaysInMonth = 30
 )
