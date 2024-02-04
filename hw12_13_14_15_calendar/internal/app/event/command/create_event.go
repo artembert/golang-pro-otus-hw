@@ -17,7 +17,7 @@ type CreateEventRequest struct {
 }
 
 type CreateEventResponse struct {
-	EventID string
+	Event domain.Event
 }
 
 type CreateEventRequestHandler interface {
@@ -38,6 +38,18 @@ func NewCreateEventRequestHandler(storage storage.EventsRepository) (CreateEvent
 func (c *createEventRequestHandler) Handle(
 	req CreateEventRequest,
 ) (*CreateEventResponse, error) {
+	if err := validateTitle(req.Title); err != nil {
+		return nil, err
+	}
+	if err := validateStartTime(req.StartTime); err != nil {
+		return nil, err
+	}
+	if err := validateDuration(req.Duration); err != nil {
+		return nil, err
+	}
+	if err := validateUserID(req.UserID); err != nil {
+		return nil, err
+	}
 	evt := &domain.Event{
 		Title:        req.Title,
 		StartTime:    req.StartTime,
@@ -47,9 +59,9 @@ func (c *createEventRequestHandler) Handle(
 		NotifyBefore: req.NotifyBefore,
 		Notified:     false,
 	}
-	id, err := c.storage.CreateEvent(evt)
+	newEvent, err := c.storage.CreateEvent(evt)
 	if err != nil {
 		return nil, err
 	}
-	return &CreateEventResponse{EventID: string(id)}, nil
+	return &CreateEventResponse{Event: *newEvent}, nil
 }

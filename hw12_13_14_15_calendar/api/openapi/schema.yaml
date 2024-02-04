@@ -53,9 +53,9 @@ paths:
           in: query
           required: true
           schema:
-            type: integer
-            format: int64
-            description: Period start (unix timestamp)
+            type: string
+            format: date-time
+            description: Period start date (RFC3339 format)
 
   /events/{id}:
     delete:
@@ -98,9 +98,9 @@ components:
           type: string
           description: Event title
         startTime:
-          type: integer
-          format: int64
-          description: Event start date (unix timestamp)
+          type: string
+          format: date-time
+          description: Event start date (RFC3339 format)
         duration:
           type: integer
           description: Duration of an event (in minutes)
