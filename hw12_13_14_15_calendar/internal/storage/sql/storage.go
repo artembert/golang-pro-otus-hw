@@ -33,6 +33,7 @@ func (s *Storage) Connect(ctx context.Context) error {
 	}
 	s.conn = pool
 
+	s.logg.Info("Connected to SQL database at " + s.cfg.BuildDBUrl())
 	return nil
 }
 

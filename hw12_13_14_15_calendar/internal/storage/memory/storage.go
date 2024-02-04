@@ -1,10 +1,12 @@
 package memorystorage
 
 import (
+	"context"
 	"sync"
 	"time"
 
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/domain"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/logger"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/storage"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage/timeutils"
 	"github.com/gofrs/uuid"
@@ -12,20 +14,22 @@ import (
 
 type eventsCollection map[domain.EventID]*domain.Event
 
-type Logger interface {
-	Error(msg string)
-}
-
 type Storage struct {
 	mu     sync.RWMutex
 	events eventsCollection
-	_      *Logger
+	logg   logger.Logger
 }
 
-func New() *Storage {
+func New(logg logger.Logger) *Storage {
 	return &Storage{
 		events: make(eventsCollection),
+		logg:   logg,
 	}
+}
+
+func (s *Storage) Connect(_ context.Context) error {
+	s.logg.Info("Connected to in-memory database")
+	return nil
 }
 
 func (s *Storage) CreateEvent(evt *domain.Event) (*domain.Event, error) {

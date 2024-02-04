@@ -14,7 +14,7 @@ import (
 func Init(ctx context.Context, cfg *config.Config, log logger.Logger) (storage.EventsRepository, error) {
 	switch storage.Type(cfg.Storage.Type) {
 	case storage.Memory:
-		return memorystorage.New(), nil
+		return memorystorage.New(log), nil
 	case storage.SQL:
 		store := sqlstorage.New(ctx, &cfg.DB, log)
 		return store, nil

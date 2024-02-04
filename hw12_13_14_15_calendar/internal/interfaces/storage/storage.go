@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"context"
 	"errors"
 	"time"
 
@@ -15,6 +16,7 @@ const (
 )
 
 type EventsRepository interface {
+	Connect(ctx context.Context) error
 	CreateEvent(evt *domain.Event) (*domain.Event, error)
 	DeleteEvent(id domain.EventID) error
 	UpdateEvent(id domain.EventID, evt *domain.Event) error
