@@ -12,7 +12,7 @@ func (handler *eventHandler) GetEvents(w http.ResponseWriter, r *http.Request, p
 	var events []*domain.Event
 	switch params.Period {
 	case openapi.Day:
-		response, err := handler.app.GetDayEvents(r.Context(), query.GetDayEventsRequest{Date: params.Date})
+		response, err := handler.app.GetDayEvents(query.GetDayEventsRequest{Date: params.Date})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return

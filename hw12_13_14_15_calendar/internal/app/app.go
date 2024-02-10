@@ -19,8 +19,8 @@ type app struct {
 }
 
 type Application interface {
-	CreateEvent(ctx context.Context, request command.CreateEventRequest) (*command.CreateEventResponse, error)
-	GetDayEvents(ctx context.Context, request query.GetDayEventsRequest) (*query.GetDayEventsResponse, error)
+	CreateEvent(request command.CreateEventRequest) (*command.CreateEventResponse, error)
+	GetDayEvents(request query.GetDayEventsRequest) (*query.GetDayEventsResponse, error)
 	// UpdateEvent(ctx context.Context, request command.UpdateEventRequest) error
 	// DeleteEvent(ctx context.Context, request command.DeleteEventRequest) error
 	// GetWeekEvents(ctx context.Context, request query.GetWeekEventsRequest) (*query.GetWeekEventsResponse, error)
@@ -54,10 +54,10 @@ func New(ctx context.Context, logg Logger, storage Storage) (Application, error)
 	}, nil
 }
 
-func (a *app) CreateEvent(_ context.Context, request command.CreateEventRequest) (*command.CreateEventResponse, error) {
+func (a *app) CreateEvent(request command.CreateEventRequest) (*command.CreateEventResponse, error) {
 	return a.createHandler.Handle(request)
 }
 
-func (a *app) GetDayEvents(ctx context.Context, request query.GetDayEventsRequest) (*query.GetDayEventsResponse, error) {
+func (a *app) GetDayEvents(request query.GetDayEventsRequest) (*query.GetDayEventsResponse, error) {
 	return a.getDayEventsHandler.Handle(request)
 }
