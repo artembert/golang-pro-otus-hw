@@ -11,21 +11,22 @@ import (
 )
 
 type app struct {
-	ctx                  context.Context
-	store                Storage
-	logger               Logger
-	createHandler        command.CreateEventRequestHandler
-	getDayEventsHandler  query.GetDayEventsRequestHandler
-	getWeekEventsHandler query.GetWeekEventsRequestHandler
+	ctx                   context.Context
+	store                 Storage
+	logger                Logger
+	createHandler         command.CreateEventRequestHandler
+	getDayEventsHandler   query.GetDayEventsRequestHandler
+	getWeekEventsHandler  query.GetWeekEventsRequestHandler
+	getMonthEventsHandler query.GetMonthEventsRequestHandler
 }
 
 type Application interface {
 	CreateEvent(request command.CreateEventRequest) (*command.CreateEventResponse, error)
 	GetDayEvents(request query.GetDayEventsRequest) (*query.GetDayEventsResponse, error)
 	GetWeekEvents(request query.GetWeekEventsRequest) (*query.GetWeekEventsResponse, error)
-	// UpdateEvent(ctx context.Context, request command.UpdateEventRequest) error
-	// DeleteEvent(ctx context.Context, request command.DeleteEventRequest) error
-	// GetMonthEvents(ctx context.Context, request query.GetMonthEventsRequest) (*query.GetMonthEventsResponse, error)
+	GetMonthEvents(request query.GetMonthEventsRequest) (*query.GetMonthEventsResponse, error)
+	// UpdateEvent(request command.UpdateEventRequest) error
+	// DeleteEvent(request command.DeleteEventRequest) error
 }
 
 type Logger interface {
@@ -53,11 +54,17 @@ func New(ctx context.Context, logg Logger, storage Storage) (Application, error)
 		logg.Error("create GetWeekEventsRequestHandler error: %w", err)
 		return nil, fmt.Errorf("create GetWeekEventsRequestHandler error: %w", err)
 	}
+	getMonthEventsHandler, err := query.NewGetMonthEventsRequestHandler(storage)
+	if err != nil {
+		logg.Error("create GetMonthEventsRequestHandler error: %w", err)
+		return nil, fmt.Errorf("create GetMonthEventsRequestHandler error: %w", err)
+	}
 	return &app{
 		ctx: ctx, store: storage, logger: logg,
-		createHandler:        createHandler,
-		getDayEventsHandler:  getDayEventsHandler,
-		getWeekEventsHandler: getWeekEventsHandler,
+		createHandler:         createHandler,
+		getDayEventsHandler:   getDayEventsHandler,
+		getWeekEventsHandler:  getWeekEventsHandler,
+		getMonthEventsHandler: getMonthEventsHandler,
 	}, nil
 }
 
@@ -71,4 +78,8 @@ func (a *app) GetDayEvents(request query.GetDayEventsRequest) (*query.GetDayEven
 
 func (a *app) GetWeekEvents(request query.GetWeekEventsRequest) (*query.GetWeekEventsResponse, error) {
 	return a.getWeekEventsHandler.Handle(request)
+}
+
+func (a *app) GetMonthEvents(request query.GetMonthEventsRequest) (*query.GetMonthEventsResponse, error) {
+	return a.getMonthEventsHandler.Handle(request)
 }

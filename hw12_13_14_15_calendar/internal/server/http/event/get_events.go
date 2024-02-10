@@ -25,6 +25,13 @@ func (handler *eventHandler) GetEvents(w http.ResponseWriter, r *http.Request, p
 			return
 		}
 		events = response.Events
+	case openapi.Month:
+		response, err := handler.app.GetMonthEvents(query.GetMonthEventsRequest{Date: params.Date})
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		events = response.Events
 	}
 
 	w.WriteHeader(http.StatusOK)
