@@ -105,7 +105,7 @@ func (s *Storage) UpdateEvent(evt *domain.Event) error {
 func (s *Storage) GetEventByID(id domain.EventID) (*domain.Event, error) {
 	s.logg.Debug("Get event by ID: " + string(id))
 	q := `SELECT
-		title, description, start_time, duration, user_id, remind_for, notified
+		id, title, description, start_time, duration, user_id, remind_for, notified
 		FROM events
 		WHERE id = $1`
 
@@ -116,7 +116,7 @@ func (s *Storage) GetEventByID(id domain.EventID) (*domain.Event, error) {
 	}
 	var evt domain.Event
 	if err := s.conn.QueryRow(s.ctx, q, evtUuid).Scan(
-		&evt.Title, &evt.Description, &evt.StartTime, &evt.Duration, &evt.UserID, &evt.NotifyBefore, &evt.Notified,
+		&evt.ID, &evt.Title, &evt.Description, &evt.StartTime, &evt.Duration, &evt.UserID, &evt.NotifyBefore, &evt.Notified,
 	); err != nil {
 		return &domain.Event{}, err
 	}
