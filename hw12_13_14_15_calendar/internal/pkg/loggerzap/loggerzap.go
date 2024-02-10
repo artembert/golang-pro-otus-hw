@@ -57,9 +57,10 @@ func New(level loglevel.LogLevel, outputPath string) (*Logger, error) {
 	default:
 		return nil, fmt.Errorf("unsupported log level: %s", level)
 	}
-	cfg := zap.NewProductionConfig()
+	cfg := zap.NewDevelopmentConfig()
 	cfg.Level = l
 	cfg.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+	cfg.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
 	cfg.OutputPaths = []string{"stdout", outputPath}
 
 	options := []zap.Option{zap.AddCallerSkip(1)}
