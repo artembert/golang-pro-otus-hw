@@ -1,6 +1,7 @@
 package memorystorage
 
 import (
+	"net/http"
 	"testing"
 	"time"
 
@@ -23,29 +24,45 @@ func getEvent(t *testing.T) domain.Event {
 	}
 }
 
+type loggerMock struct{}
+
+func (l loggerMock) Info(args ...interface{}) {
+}
+
+func (l loggerMock) Error(args ...interface{}) {
+}
+
+func (l loggerMock) Warn(args ...interface{}) {
+}
+
+func (l loggerMock) Debug(args ...interface{}) {
+}
+
+func (l loggerMock) HTTPRequest(r *http.Request, args ...interface{}) {
+}
+
 func TestStorage(t *testing.T) {
 	t.Run("CreateEvent", func(t *testing.T) {
-		s := New()
+		s := New(loggerMock{})
 		event := getEvent(t)
 
-		id, err := s.CreateEvent(&event)
+		evt, err := s.CreateEvent(&event)
 		require.NoError(t, err)
 
-		var created *domain.Event = s.events[id]
-		event.ID = id
+		var created *domain.Event = s.events[evt.ID]
 
 		require.NoError(t, err)
 		require.EqualValues(t, &event, created)
 	})
 
 	t.Run("DeleteEvent", func(t *testing.T) {
-		s := New()
+		s := New(loggerMock{})
 		event := getEvent(t)
 
-		id, err := s.CreateEvent(&event)
+		evt, err := s.CreateEvent(&event)
 		require.NoError(t, err)
 
-		err = s.DeleteEvent(id)
+		err = s.DeleteEvent(evt.ID)
 		require.NoError(t, err)
 
 		_, err = s.GetEventByID(event.ID)
@@ -53,7 +70,7 @@ func TestStorage(t *testing.T) {
 	})
 
 	t.Run("GetEventsByDate", func(t *testing.T) {
-		s := New()
+		s := New(loggerMock{})
 		targetDay := time.Date(2007, 1, 2, 1, 30, 0, 0, time.Local)
 		event1Jan2007 := getEvent(t)
 		event1Jan2007.StartTime = time.Date(2007, 1, 1, 0, 0, 0, 0, time.Local)
@@ -79,7 +96,7 @@ func TestStorage(t *testing.T) {
 	})
 
 	t.Run("GetEventsByWeek", func(t *testing.T) {
-		s := New()
+		s := New(loggerMock{})
 
 		event1Jan2007 := getEvent(t)
 		event1Jan2007.StartTime = time.Date(2007, 1, 1, 3, 0, 0, 0, time.Local)
