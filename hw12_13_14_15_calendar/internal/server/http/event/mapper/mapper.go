@@ -9,6 +9,7 @@ import (
 
 func EventToOpenapi(event *domain.Event) *openapi.Event {
 	evt := openapi.Event{
+		Description:  event.Description,
 		Duration:     int(event.Duration / time.Minute),
 		Id:           string(event.ID),
 		NotifyBefore: int(event.NotifyBefore / time.Minute),
