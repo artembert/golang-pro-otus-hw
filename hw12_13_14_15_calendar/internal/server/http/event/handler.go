@@ -25,11 +25,6 @@ func NewEventHandler(app app.Application, logger logger.Logger) openapi.ServerIn
 	}
 }
 
-func (handler *eventHandler) GetEvents(w http.ResponseWriter, r *http.Request, params openapi.GetEventsParams) {
-	// TODO implement me
-	panic("implement me")
-}
-
 func (handler *eventHandler) PutEvents(w http.ResponseWriter, r *http.Request) {
 	// TODO implement me
 	panic("implement me")
@@ -70,6 +65,22 @@ func (handler *eventHandler) writeEvent(w http.ResponseWriter, event *domain.Eve
 		handler.logger.Error("Event json marshal error: " + err.Error())
 	}
 	_, err = w.Write(resBuf)
+	if err != nil {
+		handler.logger.Error("Response write error: " + err.Error())
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+}
+
+func (handler *eventHandler) writeEventsList(w http.ResponseWriter, eventsList []*domain.Event) {
+	mapped := make([]*openapi.Event, len(eventsList))
+	for i, event := range eventsList {
+		mapped[i] = mapper.EventToOpenapi(event)
+	}
+	resBuffer, err := json.Marshal(mapped)
+	if err != nil {
+		handler.logger.Error("EventList json marshal error: " + err.Error())
+	}
+	_, err = w.Write(resBuffer)
 	if err != nil {
 		handler.logger.Error("Response write error: " + err.Error())
 	}
