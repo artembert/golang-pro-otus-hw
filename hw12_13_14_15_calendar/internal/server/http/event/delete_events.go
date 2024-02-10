@@ -1,8 +1,9 @@
 package event
 
 import (
-	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/app/event/command"
 	"net/http"
+
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/app/event/command"
 )
 
 func (handler *eventHandler) DeleteEventsID(w http.ResponseWriter, r *http.Request, id string) {

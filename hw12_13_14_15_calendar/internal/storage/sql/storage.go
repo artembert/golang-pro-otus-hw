@@ -74,7 +74,7 @@ func (s *Storage) DeleteEvent(id domain.EventID) error {
 	return nil
 }
 
-func (s *Storage) UpdateEvent(evt *domain.Event) error {
+func (s *Storage) UpdateEvent(evt *domain.Event) (*domain.Event, error) {
 	q := `UPDATE events set
 		title = $1,
 		description = $2,
@@ -84,6 +84,12 @@ func (s *Storage) UpdateEvent(evt *domain.Event) error {
 		remind_for = $6,
 		notified = $7
 	  	WHERE id = $8`
+
+	evtUuid, err := uuid.FromString(string(evt.ID))
+	if err != nil {
+		s.logg.Error("failed to convert id to uuid: " + err.Error())
+		return nil, err
+	}
 	if _, err := s.conn.Exec(
 		s.ctx,
 		q,
@@ -94,12 +100,13 @@ func (s *Storage) UpdateEvent(evt *domain.Event) error {
 		evt.UserID,
 		evt.NotifyBefore,
 		evt.Notified,
-		evt.ID,
+		evtUuid,
 	); err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	s.logg.Debug("Event with ID: " + string(evt.ID) + "has been updated")
+	return s.GetEventByID(evt.ID)
 }
 
 func (s *Storage) GetEventByID(id domain.EventID) (*domain.Event, error) {

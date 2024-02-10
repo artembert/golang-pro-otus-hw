@@ -65,14 +65,16 @@ func (s *Storage) DeleteEvent(id domain.EventID) error {
 	return nil
 }
 
-func (s *Storage) UpdateEvent(evt *domain.Event) error {
+func (s *Storage) UpdateEvent(evt *domain.Event) (*domain.Event, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	id := evt.ID
-	s.events[id] = evt
+	if _, ok := s.events[evt.ID]; !ok {
+		return &domain.Event{}, storage.ErrEventNotFound
+	}
+	s.events[evt.ID] = evt
 
-	return nil
+	return evt, nil
 }
 
 func (s *Storage) GetEventByID(id domain.EventID) (*domain.Event, error) {

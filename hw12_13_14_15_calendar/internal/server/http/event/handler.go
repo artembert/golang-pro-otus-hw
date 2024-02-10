@@ -25,11 +25,6 @@ func NewEventHandler(app app.Application, logger logger.Logger) openapi.ServerIn
 	}
 }
 
-func (handler *eventHandler) PutEvents(w http.ResponseWriter, r *http.Request) {
-	// TODO implement me
-	panic("implement me")
-}
-
 func (handler *eventHandler) writeError(w http.ResponseWriter, err error) {
 	if errors.Is(err, app.ErrEventNotFound) {
 		w.WriteHeader(http.StatusNotFound)
