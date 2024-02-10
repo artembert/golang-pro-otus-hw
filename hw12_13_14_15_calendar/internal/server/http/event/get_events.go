@@ -18,7 +18,15 @@ func (handler *eventHandler) GetEvents(w http.ResponseWriter, r *http.Request, p
 			return
 		}
 		events = response.Events
+	case openapi.Week:
+		response, err := handler.app.GetWeekEvents(query.GetWeekEventsRequest{Date: params.Date})
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		events = response.Events
 	}
+
 	w.WriteHeader(http.StatusOK)
 	handler.writeEventsList(w, events)
 }
