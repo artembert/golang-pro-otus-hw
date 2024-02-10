@@ -143,7 +143,7 @@ func (s *Storage) GetEventsByMonth(startOfMonth time.Time) ([]*domain.Event, err
 
 func (s *Storage) getEventsForPeriod(startDate time.Time, endDate time.Time) ([]*domain.Event, error) {
 	q := `SELECT 
-    	title, description, start_time, duration, user_id, remind_for, notified 
+    	id, title, description, start_time, duration, user_id, remind_for, notified 
 	FROM
 		events 
 	WHERE 
@@ -161,7 +161,7 @@ func (s *Storage) getEventsForPeriod(startDate time.Time, endDate time.Time) ([]
 	for rows.Next() {
 		var evt domain.Event
 		if err := rows.Scan(
-			&evt.Title, &evt.Description, &evt.StartTime, &evt.Duration, &evt.UserID, &evt.NotifyBefore, &evt.Notified,
+			&evt.ID, &evt.Title, &evt.Description, &evt.StartTime, &evt.Duration, &evt.UserID, &evt.NotifyBefore, &evt.Notified,
 		); err != nil {
 			s.logg.Warn("failed to scan row: " + err.Error())
 		} else {
