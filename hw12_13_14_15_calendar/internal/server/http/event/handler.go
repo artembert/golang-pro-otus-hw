@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"time"
 
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/domain"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/app"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/app/event/command"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/logger"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/server/http/event/mapper"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/pkg/api/openapi"
 )
 
@@ -63,14 +63,8 @@ func (handler *eventHandler) writeError(w http.ResponseWriter, err error) {
 	w.WriteHeader(http.StatusInternalServerError)
 }
 
-func (handler *eventHandler) writeEvent(w http.ResponseWriter, event domain.Event) {
-	createdEvent := openapi.Event{
-		Duration:     int(event.Duration / time.Minute),
-		Id:           string(event.ID),
-		NotifyBefore: int(event.NotifyBefore / time.Minute),
-		StartTime:    event.StartTime, // TODO: Replace with time.MarshalText()
-		Title:        event.Title,
-	}
+func (handler *eventHandler) writeEvent(w http.ResponseWriter, event *domain.Event) {
+	createdEvent := mapper.EventToOpenapi(event)
 	resBuf, err := json.Marshal(createdEvent)
 	if err != nil {
 		handler.logger.Error("Event json marshal error: " + err.Error())

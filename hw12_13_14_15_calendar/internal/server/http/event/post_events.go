@@ -35,5 +35,5 @@ func (handler *eventHandler) PostEvents(w http.ResponseWriter, r *http.Request) 
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	handler.writeEvent(w, res.Event)
+	handler.writeEvent(w, &res.Event)
 }
