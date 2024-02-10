@@ -30,11 +30,6 @@ func (handler *eventHandler) PutEvents(w http.ResponseWriter, r *http.Request) {
 	panic("implement me")
 }
 
-func (handler *eventHandler) DeleteEventsID(w http.ResponseWriter, r *http.Request, id string) {
-	// TODO implement me
-	panic("implement me")
-}
-
 func (handler *eventHandler) writeError(w http.ResponseWriter, err error) {
 	if errors.Is(err, app.ErrEventNotFound) {
 		w.WriteHeader(http.StatusNotFound)

@@ -60,9 +60,14 @@ func (s *Storage) CreateEvent(evt *domain.Event) (*domain.Event, error) {
 }
 
 func (s *Storage) DeleteEvent(id domain.EventID) error {
+	evtUuid, err := uuid.FromString(string(id))
+	if err != nil {
+		s.logg.Error("failed to convert id to uuid: " + err.Error())
+		return err
+	}
 	query := `DELETE FROM events WHERE id = $1`
 
-	if _, err := s.conn.Exec(s.ctx, query, id); err != nil {
+	if _, err := s.conn.Exec(s.ctx, query, evtUuid); err != nil {
 		return err
 	}
 

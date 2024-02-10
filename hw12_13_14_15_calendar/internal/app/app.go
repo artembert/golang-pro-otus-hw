@@ -18,6 +18,7 @@ type app struct {
 	getDayEventsHandler   query.GetDayEventsRequestHandler
 	getWeekEventsHandler  query.GetWeekEventsRequestHandler
 	getMonthEventsHandler query.GetMonthEventsRequestHandler
+	deleteEventHandler    command.DeleteEventRequestHandler
 }
 
 type Application interface {
@@ -25,8 +26,8 @@ type Application interface {
 	GetDayEvents(request query.GetDayEventsRequest) (*query.GetDayEventsResponse, error)
 	GetWeekEvents(request query.GetWeekEventsRequest) (*query.GetWeekEventsResponse, error)
 	GetMonthEvents(request query.GetMonthEventsRequest) (*query.GetMonthEventsResponse, error)
+	DeleteEvent(request command.DeleteEventRequest) error
 	// UpdateEvent(request command.UpdateEventRequest) error
-	// DeleteEvent(request command.DeleteEventRequest) error
 }
 
 type Logger interface {
@@ -44,6 +45,11 @@ func New(ctx context.Context, logg Logger, storage Storage) (Application, error)
 		logg.Error("create CreateEventRequestHandler error: %w", err)
 		return nil, fmt.Errorf("create CreateEventRequestHandler error: %w", err)
 	}
+	deleteEventHandler, err := command.NewDeleteEventRequestHandler(storage)
+	if err != nil {
+		logg.Error("create NewDeleteEventRequestHandler error: %w", err)
+		return nil, fmt.Errorf("create NewDeleteEventRequestHandler error: %w", err)
+	}
 	getDayEventsHandler, err := query.NewGetDayEventsRequestHandler(storage)
 	if err != nil {
 		logg.Error("create GetDayEventsRequestHandler error: %w", err)
@@ -59,17 +65,23 @@ func New(ctx context.Context, logg Logger, storage Storage) (Application, error)
 		logg.Error("create GetMonthEventsRequestHandler error: %w", err)
 		return nil, fmt.Errorf("create GetMonthEventsRequestHandler error: %w", err)
 	}
+
 	return &app{
 		ctx: ctx, store: storage, logger: logg,
 		createHandler:         createHandler,
 		getDayEventsHandler:   getDayEventsHandler,
 		getWeekEventsHandler:  getWeekEventsHandler,
 		getMonthEventsHandler: getMonthEventsHandler,
+		deleteEventHandler:    deleteEventHandler,
 	}, nil
 }
 
 func (a *app) CreateEvent(request command.CreateEventRequest) (*command.CreateEventResponse, error) {
 	return a.createHandler.Handle(request)
+}
+
+func (a *app) DeleteEvent(request command.DeleteEventRequest) error {
+	return a.deleteEventHandler.Handle(request)
 }
 
 func (a *app) GetDayEvents(request query.GetDayEventsRequest) (*query.GetDayEventsResponse, error) {
