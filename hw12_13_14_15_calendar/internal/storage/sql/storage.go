@@ -74,7 +74,7 @@ func (s *Storage) DeleteEvent(id domain.EventID) error {
 	return nil
 }
 
-func (s *Storage) UpdateEvent(id domain.EventID, evt *domain.Event) error {
+func (s *Storage) UpdateEvent(evt *domain.Event) error {
 	q := `UPDATE events set
 		title = $1,
 		description = $2,
@@ -94,7 +94,7 @@ func (s *Storage) UpdateEvent(id domain.EventID, evt *domain.Event) error {
 		evt.UserID,
 		evt.NotifyBefore,
 		evt.Notified,
-		id,
+		evt.ID,
 	); err != nil {
 		return err
 	}

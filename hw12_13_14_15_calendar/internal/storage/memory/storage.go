@@ -65,10 +65,11 @@ func (s *Storage) DeleteEvent(id domain.EventID) error {
 	return nil
 }
 
-func (s *Storage) UpdateEvent(id domain.EventID, evt *domain.Event) error {
+func (s *Storage) UpdateEvent(evt *domain.Event) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
+	id := evt.ID
 	s.events[id] = evt
 
 	return nil
