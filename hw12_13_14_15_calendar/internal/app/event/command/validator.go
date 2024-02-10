@@ -1,6 +1,10 @@
 package command
 
-import "time"
+import (
+	"time"
+
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/domain"
+)
 
 type ErrValidate struct {
 	message string
@@ -33,8 +37,8 @@ func validateDuration(duration time.Duration) error {
 	return nil
 }
 
-func validateUserID(userID string) error {
-	if userID == "" {
+func validateUserID(id domain.UserID) error {
+	if string(id) == "" {
 		return NewErrValidate("user ID is empty")
 	}
 	return nil

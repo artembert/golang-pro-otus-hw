@@ -102,14 +102,14 @@ components:
           format: date-time
           description: Event start date (RFC3339 format)
         duration:
-          type: integer
-          description: Duration of an event (in minutes)
+          type: string
+          description: Duration of an event (in 3d1h3m format)
         description:
           type: string
           description: Event description
         notifyBefore:
-          type: integer
-          description: Amount of minutes to notify user before the event
+          type: string
+          description: Duration before the notification date (in 3d1h3m format)
 
 
     EventsPeriod: # query parameter

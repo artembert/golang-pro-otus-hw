@@ -3,10 +3,10 @@ package event
 import (
 	"encoding/json"
 	"net/http"
-	"time"
 
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/app"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/app/event/command"
+	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/server/http/event/mapper"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/pkg/api/openapi"
 )
 
@@ -19,16 +19,15 @@ func (handler *eventHandler) PutEvents(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	request := command.UpdateEventRequest{
-		ID:           evt.Id,
-		Title:        evt.Title,
-		StartTime:    evt.StartTime,
-		Duration:     time.Duration(evt.Duration) * time.Minute,
-		Description:  evt.Description,
-		UserID:       r.Header.Get(app.HeaderUserId),
-		NotifyBefore: time.Duration(evt.NotifyBefore) * time.Minute,
+	evtToUpdate, err := mapper.OpenapiEventToEvent(&evt, r.Header.Get(app.HeaderUserId))
+	if err != nil {
+		handler.logger.Error("openapi.Event to Event error: " + err.Error())
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
-	res, err := handler.app.UpdateEvent(request)
+	res, err := handler.app.UpdateEvent(command.UpdateEventRequest{
+		Event: evtToUpdate,
+	})
 	if err != nil {
 		handler.logger.Error("update event error: " + err.Error())
 		handler.writeError(w, err)

@@ -1,19 +1,12 @@
 package command
 
 import (
-	"time"
-
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/domain"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/interfaces/storage"
 )
 
 type CreateEventRequest struct {
-	Title        string
-	StartTime    time.Time
-	Duration     time.Duration
-	Description  string
-	UserID       string
-	NotifyBefore time.Duration
+	Event *domain.Event
 }
 
 type CreateEventResponse struct {
@@ -38,27 +31,20 @@ func NewCreateEventRequestHandler(storage storage.EventsRepository) (CreateEvent
 func (c *createEventRequestHandler) Handle(
 	req CreateEventRequest,
 ) (*CreateEventResponse, error) {
-	if err := validateTitle(req.Title); err != nil {
+	evt := req.Event
+	if err := validateTitle(evt.Title); err != nil {
 		return nil, err
 	}
-	if err := validateStartTime(req.StartTime); err != nil {
+	if err := validateStartTime(evt.StartTime); err != nil {
 		return nil, err
 	}
-	if err := validateDuration(req.Duration); err != nil {
+	if err := validateDuration(evt.Duration); err != nil {
 		return nil, err
 	}
-	if err := validateUserID(req.UserID); err != nil {
+	if err := validateUserID(evt.UserID); err != nil {
 		return nil, err
 	}
-	evt := &domain.Event{
-		Title:        req.Title,
-		StartTime:    req.StartTime,
-		Duration:     req.Duration,
-		Description:  req.Description,
-		UserID:       domain.UserID(req.UserID),
-		NotifyBefore: req.NotifyBefore,
-		Notified:     false,
-	}
+
 	newEvent, err := c.storage.CreateEvent(evt)
 	if err != nil {
 		return nil, err

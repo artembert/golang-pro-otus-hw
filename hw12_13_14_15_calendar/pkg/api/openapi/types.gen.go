@@ -24,12 +24,12 @@ type Event struct {
 	// Description Event description
 	Description string `json:"description"`
 
-	// Duration Duration of an event (in minutes)
-	Duration int    `json:"duration"`
+	// Duration Duration of an event (in 3d1h3m format)
+	Duration string `json:"duration"`
 	Id       string `json:"id"`
 
-	// NotifyBefore Amount of minutes to notify user before the event
-	NotifyBefore int `json:"notifyBefore"`
+	// NotifyBefore Duration before the notification date (in 3d1h3m format)
+	NotifyBefore string `json:"notifyBefore"`
 
 	// StartTime Event start date (RFC3339 format)
 	StartTime time.Time `json:"startTime"`
@@ -46,11 +46,11 @@ type NewEvent struct {
 	// Description Event description
 	Description string `json:"description"`
 
-	// Duration Duration of an event (in minutes)
-	Duration int `json:"duration"`
+	// Duration Duration of an event (in 3d1h3m format)
+	Duration string `json:"duration"`
 
-	// NotifyBefore Amount of minutes to notify user before the event
-	NotifyBefore int `json:"notifyBefore"`
+	// NotifyBefore Duration before the notification date (in 3d1h3m format)
+	NotifyBefore string `json:"notifyBefore"`
 
 	// StartTime Event start date (RFC3339 format)
 	StartTime time.Time `json:"startTime"`
