@@ -32,6 +32,7 @@ type DBConf struct {
 type ServerConf struct {
 	Host              string        `yaml:"host"`
 	Port              string        `yaml:"port"`
+	GRPCPort          string        `yaml:"grpcPort"`
 	ReadHeaderTimeout time.Duration `yaml:"readHeaderTimeout"`
 	ReadTimeout       time.Duration `yaml:"readTimeout"`
 	WriteTimeout      time.Duration `yaml:"writeTimeout"`

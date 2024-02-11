@@ -53,13 +53,13 @@ func New(logger Logger, app app.Application, cfg Config) *Server {
 }
 
 func (s *Server) Start(ctx context.Context) error {
-	s.logger.Info("starting server at", s.server.Addr)
+	s.logger.Info("starting HTTP server at", s.server.Addr)
 	if err := s.server.ListenAndServe(); err != nil {
 		if errors.Is(err, http.ErrServerClosed) {
 			s.logger.Info("http server stopped gracefully")
 			return nil
 		}
-		return errorspkg.Wrap(err, "error while starting server")
+		return errorspkg.Wrap(err, "error while starting HTTP server")
 	}
 
 	<-ctx.Done()
@@ -68,7 +68,7 @@ func (s *Server) Start(ctx context.Context) error {
 }
 
 func (s *Server) Stop(ctx context.Context) error {
-	s.logger.Info("stopping server")
+	s.logger.Info("stopping HTTP server")
 	if err := s.server.Shutdown(ctx); err != nil {
 		return errorspkg.Wrap(err, "error while stopping server")
 	}

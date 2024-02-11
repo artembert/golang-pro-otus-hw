@@ -6,11 +6,13 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"sync"
 	"syscall"
 
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/app"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/config"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/pkg/loggerzap"
+	internalgrpc "github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/server/grpc"
 	internalhttp "github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/server/http"
 	"github.com/artembert/golang-pro-otus-hw/hw12_13_14_15_calendar/internal/storage/factory"
 )
@@ -62,21 +64,46 @@ func main() {
 		os.Exit(1) //nolint:gocritic
 	}
 
-	server := internalhttp.New(logg, calendar, internalhttp.Config(cfg.Server))
+	server := internalhttp.New(logg, calendar, internalhttp.Config{
+		Host:              cfg.Server.Host,
+		Port:              cfg.Server.Port,
+		ReadHeaderTimeout: cfg.Server.ReadHeaderTimeout,
+		ReadTimeout:       cfg.Server.ReadTimeout,
+		WriteTimeout:      cfg.Server.WriteTimeout,
+	})
+	grpcServer := internalgrpc.New(logg, calendar, internalgrpc.Config{
+		Host: cfg.Server.Host,
+		Port: cfg.Server.GRPCPort,
+	})
 
+	wg := sync.WaitGroup{}
+	wg.Add(2)
 	go func() {
 		<-ctx.Done()
 
+		grpcServer.Stop()
 		if err := server.Stop(ctx); err != nil {
 			logg.Error("failed to stop http server: " + err.Error())
 		}
 	}()
 
-	logg.Info("calendar is running...")
+	go func() {
+		if err := server.Start(ctx); err != nil {
+			logg.Error("failed to start http server: " + err.Error())
+			cancel()
 
-	if err := server.Start(ctx); err != nil {
-		logg.Error("failed to start http server: " + err.Error())
-		cancel()
-		os.Exit(1) //nolint:gocritic
-	}
+		}
+		wg.Done()
+	}()
+
+	go func() {
+		if err := grpcServer.Start(ctx); err != nil {
+			logg.Error("failed to start grpc server: " + err.Error())
+			cancel()
+		}
+		wg.Done()
+	}()
+
+	logg.Info("calendar is running...")
+	wg.Wait()
 }

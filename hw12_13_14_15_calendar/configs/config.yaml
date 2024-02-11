@@ -13,6 +13,7 @@ db:
 server:
   host: "127.0.0.1"
   port: "8080"
+  grpcPort: "8081"
   readHeaderTimeout: 10s
   readTimeout: 10s
   writeTimeout: 10s
